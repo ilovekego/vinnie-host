@@ -106,9 +106,20 @@ passport.use(new GitHubStrategy({
     passReqToCallback: true
 }, async (req, accessToken, refreshToken, profile, done) => {
     try {
+        let user = await User.findOne({ where: { githubId: profile.id } });
+
+        if (user) {
+            user.githubAccessToken = accessToken;
+            if (!user.avatar && profile.photos && profile.photos[0]) {
+                user.avatar = profile.photos[0].value;
+            }
+            await user.save();
+            return done(null, user);
+        }
+
         if (req.user && req.user.id) {
-            let user = await User.findByPk(req.user.id);
-            if (user) {
+            user = await User.findByPk(req.user.id);
+            if (user && !user.githubId) {
                 user.githubId = profile.id;
                 user.githubAccessToken = accessToken;
                 if (!user.avatar && profile.photos && profile.photos[0]) {
@@ -119,18 +130,13 @@ passport.use(new GitHubStrategy({
             }
         }
 
-        let user = await User.findOne({ where: { githubId: profile.id } });
-        if (!user) {
-            user = await User.create({ 
-                githubId: profile.id, 
-                displayName: profile.username || profile.displayName,
-                avatar: profile.photos && profile.photos[0] ? profile.photos[0].value : null,
-                githubAccessToken: accessToken
-            });
-        } else {
-            user.githubAccessToken = accessToken;
-            await user.save();
-        }
+        user = await User.create({ 
+            githubId: profile.id, 
+            displayName: profile.username || profile.displayName,
+            avatar: profile.photos && profile.photos[0] ? profile.photos[0].value : null,
+            githubAccessToken: accessToken
+        });
+        
         return done(null, user);
     } catch (err) { 
         console.error("GitHub Auth Error:", err);
