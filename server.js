@@ -57,9 +57,9 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: { 
-        secure: process.env.NODE_ENV === 'production',
+        secure: false, // --- THE FINAL FIX: FORCE COOKIE OVER PROXY ---
         maxAge: 1000 * 60 * 60 * 24,
-        sameSite: 'lax' // Ensures OAuth redirects keep the cookie
+        sameSite: 'lax'
     } 
 }));
 
