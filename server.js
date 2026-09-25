@@ -24,6 +24,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // --- DATABASE ---
+sequelize.options.pool = {
+    max: 3,
+    min: 0,
+    acquire: 30000,
+    idle: 10000
+};
+
 sequelize.sync({ alter: true })
     .then(() => {
         console.log('Vinnie Grid: PostgreSQL Database Connected');
@@ -33,6 +40,8 @@ sequelize.sync({ alter: true })
 // --- SESSION & AUTH ---
 const pgPool = new pg.Pool({
     connectionString: process.env.DATABASE_URL,
+    max: 3,
+    idleTimeoutMillis: 30000,
     ssl: {
         rejectUnauthorized: false
     }
