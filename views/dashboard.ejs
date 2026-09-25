@@ -804,7 +804,7 @@
             <div class="section-title">
                 <div>
                     <h2>Deploy Center</h2>
-                    <p>Paste any public GitHub repository, scan it, add env variables, then deploy.</p>
+                    <p>Paste any public GitHub repository, or connect your account for private repos.</p>
                 </div>
             </div>
 
@@ -816,13 +816,30 @@
                     </p>
 
                     <div class="input-group">
-                        <label>GitHub Repository URL</label>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                            <label style="margin-bottom: 0;">GitHub Repository URL</label>
+                            <% if(user && !user.githubId) { %>
+                                <a href="/auth/github" class="small-btn" style="height: 28px; width: auto; padding: 0 12px; font-size: 0.75rem; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
+                                    <i class="fa-brands fa-github"></i> Connect GitHub
+                                </a>
+                            <% } %>
+                        </div>
+
+                        <% if(user && user.githubId) { %>
+                            <select id="repo-dropdown" style="margin-bottom: 12px; color: var(--text-secondary);" onchange="if(this.value) document.getElementById('repoUrl').value = this.value;">
+                                <option value="">Loading your repositories...</option>
+                            </select>
+                        <% } %>
+
                         <div class="search-wrap">
-                            <input type="text" id="repoUrl" placeholder="https://github.com/user/repo" value="">
+                            <input type="text" id="repoUrl" placeholder="https://github.com/user/public-repo" value="">
                             <button class="btn btn-secondary" id="scan-btn" onclick="checkAndAction(scanBlueprint)">
                                 Scan
                             </button>
                         </div>
+                        <p class="promo-text" style="margin-top: 8px; font-size: 0.75rem;">
+                            Paste any public repository URL, or select from your connected GitHub account above.
+                        </p>
                     </div>
 
                     <div id="dynamic-area" class="dynamic-area">
@@ -923,7 +940,7 @@
                                 <button class="small-btn" onclick="copyText('https://<%= app.appName %>.gathuo.app')" title="Copy URL"><i class="fa-solid fa-copy"></i></button>
                                 <button class="small-btn" onclick="loadConfig('<%= app.appName %>')" title="Config"><i class="fa-solid fa-gear"></i></button>
                                 <button class="small-btn danger" onclick="terminateUnit('<%= app.appName %>')" title="Terminate"><i class="fa-solid fa-trash"></i></button>
-                            </div>
+                                </div>
                         </div>
                     <% }) %>
                 </div>
@@ -1425,6 +1442,26 @@
                     })
                     .catch(() => {});
             }, 5000);
+        <% } %>
+
+        <% if(user && user.githubId) { %>
+            fetch('/deploy/github-repos')
+                .then(res => res.json())
+                .then(data => {
+                    const select = document.getElementById('repo-dropdown');
+                    if(data.success && data.repos && data.repos.length > 0) {
+                        select.innerHTML = '<option value="">-- Select from your GitHub (Auto-fills below) --</option>';
+                        data.repos.forEach(repo => {
+                            select.innerHTML += `<option value="${repo.url}">${repo.private ? '🔒' : '🌎'} ${repo.name}</option>`;
+                        });
+                    } else {
+                        select.innerHTML = '<option value="">No repositories found. Paste URL below.</option>';
+                    }
+                })
+                .catch(() => {
+                    const select = document.getElementById('repo-dropdown');
+                    if(select) select.innerHTML = '<option value="">Failed to load repos. Paste URL below.</option>';
+                });
         <% } %>
     </script>
 </body>
