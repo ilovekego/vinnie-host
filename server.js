@@ -79,7 +79,7 @@ passport.deserializeUser(async (id, done) => {
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: "/auth/google/callback",
+    callbackURL: "https://host.vinniedigitalhub.co.ke/auth/google/callback",
     // --- FIX 2: ENABLE PROXY FOR GOOGLE ---
     proxy: true 
 }, async (accessToken, refreshToken, profile, done) => {
@@ -99,7 +99,7 @@ passport.use(new GoogleStrategy({
 passport.use(new GitHubStrategy({
     clientID: process.env.GITHUB_CLIENT_ID,
     clientSecret: process.env.GITHUB_CLIENT_SECRET,
-    callbackURL: "/auth/github/callback",
+    callbackURL: "https://host.vinniedigitalhub.co.ke/auth/github/callback",
     // --- FIX 3: ENABLE PROXY FOR GITHUB ---
     proxy: true 
 }, async (accessToken, refreshToken, profile, done) => {
