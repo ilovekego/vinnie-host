@@ -27,6 +27,10 @@ const User = sequelize.define('User', {
         allowNull: true,
         unique: true
     },
+    githubAccessToken: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
     avatar: {
         type: DataTypes.TEXT,
         allowNull: true
