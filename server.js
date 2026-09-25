@@ -124,7 +124,7 @@ app.get('/auth/github/callback', passport.authenticate('github', { failureRedire
 app.get('/dashboard', async (req, res) => {
     try {
         // Still fetch heroku app count for guests to see global status
-        const herokuApps = await heroku.get(`/teams/${process.env.HEROKU_TEAM_NAME}/apps`);
+        const herokuApps = await heroku.get('/apps');
         const totalDeployed = herokuApps.length;
 
         res.render('dashboard', { 
