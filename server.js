@@ -106,15 +106,17 @@ passport.use(new GitHubStrategy({
     passReqToCallback: true
 }, async (req, accessToken, refreshToken, profile, done) => {
     try {
-        if (req.user) {
+        if (req.user && req.user.id) {
             let user = await User.findByPk(req.user.id);
-            user.githubId = profile.id;
-            user.githubAccessToken = accessToken;
-            if (!user.avatar && profile.photos && profile.photos[0]) {
-                user.avatar = profile.photos[0].value;
+            if (user) {
+                user.githubId = profile.id;
+                user.githubAccessToken = accessToken;
+                if (!user.avatar && profile.photos && profile.photos[0]) {
+                    user.avatar = profile.photos[0].value;
+                }
+                await user.save();
+                return done(null, user);
             }
-            await user.save();
-            return done(null, user);
         }
 
         let user = await User.findOne({ where: { githubId: profile.id } });
@@ -130,7 +132,10 @@ passport.use(new GitHubStrategy({
             await user.save();
         }
         return done(null, user);
-    } catch (err) { return done(err, null); }
+    } catch (err) { 
+        console.error("GitHub Auth Error:", err);
+        return done(err, null); 
+    }
 }));
 
 // --- ROUTES ---
