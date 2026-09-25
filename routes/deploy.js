@@ -115,10 +115,11 @@ router.post('/launch', async (req, res) => {
     try {
         const unitName = configVars.APP_NAME || `vinnie-unit-${Math.random().toString(36).substring(2, 8)}`;
 
-        const app = await heroku.post('/teams/apps', {
+        // --- FIX: Changed endpoint to /apps and disabled the team property ---
+        const app = await heroku.post('/apps', {
             body: {
                 name: unitName,
-                team: process.env.HEROKU_TEAM_NAME,
+                // team: process.env.HEROKU_TEAM_NAME, 
                 region: "us"
             }
         });
