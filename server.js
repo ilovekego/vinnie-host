@@ -102,16 +102,32 @@ passport.use(new GitHubStrategy({
     clientSecret: process.env.GITHUB_CLIENT_SECRET,
     callbackURL: "https://host.vinniedigitalhub.co.ke/auth/github/callback",
     // --- FIX 3: ENABLE PROXY FOR GITHUB ---
-    proxy: true 
-}, async (accessToken, refreshToken, profile, done) => {
+    proxy: true,
+    passReqToCallback: true
+}, async (req, accessToken, refreshToken, profile, done) => {
     try {
+        if (req.user) {
+            let user = await User.findByPk(req.user.id);
+            user.githubId = profile.id;
+            user.githubAccessToken = accessToken;
+            if (!user.avatar && profile.photos && profile.photos[0]) {
+                user.avatar = profile.photos[0].value;
+            }
+            await user.save();
+            return done(null, user);
+        }
+
         let user = await User.findOne({ where: { githubId: profile.id } });
         if (!user) {
             user = await User.create({ 
                 githubId: profile.id, 
                 displayName: profile.username || profile.displayName,
-                avatar: profile.photos && profile.photos[0] ? profile.photos[0].value : null 
+                avatar: profile.photos && profile.photos[0] ? profile.photos[0].value : null,
+                githubAccessToken: accessToken
             });
+        } else {
+            user.githubAccessToken = accessToken;
+            await user.save();
         }
         return done(null, user);
     } catch (err) { return done(err, null); }
@@ -125,7 +141,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
-app.get('/auth/github', passport.authenticate('github', { scope: ['user:email'] }));
+app.get('/auth/github', passport.authenticate('github', { scope: ['user:email', 'repo'] }));
 
 app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/' }), (req, res) => res.redirect('/dashboard'));
 app.get('/auth/github/callback', passport.authenticate('github', { failureRedirect: '/' }), (req, res) => res.redirect('/dashboard'));
