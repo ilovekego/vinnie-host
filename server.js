@@ -11,8 +11,8 @@ const path = require('path');
 const Heroku = require('heroku-client');
 
 const app = express();
-// --- FIX 1: TRUST HEROKU PROXY ---
-app.set('trust proxy', 1); 
+// --- FIX 1: TRUST ALL PROXIES IN THE CHAIN ---
+app.set('trust proxy', true); 
 
 const heroku = new Heroku({ token: process.env.HEROKU_API_KEY });
 
@@ -58,7 +58,8 @@ app.use(session({
     saveUninitialized: false,
     cookie: { 
         secure: process.env.NODE_ENV === 'production',
-        maxAge: 1000 * 60 * 60 * 24
+        maxAge: 1000 * 60 * 60 * 24,
+        sameSite: 'lax' // Ensures OAuth redirects keep the cookie
     } 
 }));
 
