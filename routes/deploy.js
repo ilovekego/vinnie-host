@@ -211,4 +211,31 @@ router.post('/config/:appName', async (req, res) => {
     res.json({ updated });
 });
 
+// 7. FETCH GITHUB REPOSITORIES (Public & Private)
+router.get('/github-repos', async (req, res) => {
+    if (!req.isAuthenticated()) return res.status(401).json({ success: false, error: 'Not logged in' });
+    
+    const user = await User.findByPk(req.user.id);
+    if (!user || !user.githubAccessToken) return res.status(403).json({ success: false, error: 'GitHub not connected' });
+
+    try {
+        const response = await axios.get('https://api.github.com/user/repos?sort=updated&per_page=100', {
+            headers: {
+                Authorization: `token ${user.githubAccessToken}`,
+                Accept: 'application/vnd.github.v3+json'
+            }
+        });
+        
+        const repos = response.data.map(repo => ({
+            name: repo.full_name,
+            private: repo.private,
+            url: repo.html_url
+        }));
+        
+        res.json({ success: true, repos });
+    } catch (err) {
+        res.status(500).json({ success: false, message: 'Failed to fetch repositories' });
+    }
+});
+
 module.exports = router;
