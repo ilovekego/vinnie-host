@@ -10,12 +10,13 @@
     <style>
         :root[data-theme="dark"] {
             --bg: #000000;
-            --bg-surface: #111111;
-            --bg-elevated: #1a1a1a;
-            --border: #222222;
-            --border-focus: #444444;
-            --text-primary: #ededed;
-            --text-secondary: #888888;
+            --sidebar-bg: #09090b;
+            --bg-surface: #121215;
+            --bg-elevated: #1a1a1f;
+            --border: #27272a;
+            --border-focus: #52525b;
+            --text-primary: #f4f4f5;
+            --text-secondary: #a1a1aa;
             --accent: #ffffff;
             --accent-text: #000000;
             --success: #0070f3; 
@@ -25,12 +26,13 @@
 
         :root[data-theme="light"] {
             --bg: #ffffff;
-            --bg-surface: #f4f4f5;
+            --sidebar-bg: #f4f4f5;
+            --bg-surface: #ffffff;
             --bg-elevated: #e4e4e7;
             --border: #d4d4d8;
             --border-focus: #a1a1aa;
             --text-primary: #09090b;
-            --text-secondary: #71717a;
+            --text-secondary: #52525b;
             --accent: #09090b;
             --accent-text: #ffffff;
             --success: #0070f3; 
@@ -59,10 +61,10 @@
             text-decoration: none;
         }
 
-        /* --- SIDEBAR NAVIGATION --- */
+        /* --- SIDEBAR NAVIGATION (HIGH CONTRAST) --- */
         .sidebar {
             width: 260px;
-            background-color: var(--bg);
+            background-color: var(--sidebar-bg);
             border-right: 1px solid var(--border);
             height: 100vh;
             position: fixed;
@@ -90,6 +92,7 @@
             font-weight: 600;
             font-size: 1rem;
             padding: 0 8px;
+            color: var(--text-primary);
         }
 
         .brand-icon {
@@ -109,13 +112,13 @@
             color: var(--text-secondary);
             margin-bottom: 8px;
             padding: 0 8px;
-            font-weight: 600;
+            font-weight: 700;
         }
 
         .nav-group {
             display: flex;
             flex-direction: column;
-            gap: 2px;
+            gap: 4px;
         }
 
         .nav-link {
@@ -138,6 +141,7 @@
         .nav-link:hover, .nav-link.active {
             background-color: var(--bg-surface);
             color: var(--text-primary);
+            border: 1px solid var(--border);
         }
 
         /* --- SIDEBAR FOOTER & CONTROLS --- */
@@ -174,9 +178,9 @@
         }
 
         .theme-btn.active {
-            background-color: var(--bg);
+            background-color: var(--bg-elevated);
             color: var(--text-primary);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
         }
 
         .sidebar-profile {
@@ -217,6 +221,7 @@
             overflow: hidden;
             text-overflow: ellipsis;
             max-width: 120px;
+            color: var(--text-primary);
         }
 
         /* --- MAIN CONTENT WRAPPER --- */
@@ -439,6 +444,7 @@
             cursor: pointer;
             font-size: 0.875rem;
             font-family: monospace;
+            color: var(--text-primary);
         }
 
         .repo-dropdown-card {
@@ -477,6 +483,7 @@
             cursor: pointer;
             border-bottom: 1px solid var(--border);
             transition: background 0.15s;
+            color: var(--text-primary);
         }
 
         .repo-option-item:hover {
@@ -728,7 +735,7 @@
             left: 0;
             right: 0;
             height: 60px;
-            background-color: var(--bg);
+            background-color: var(--sidebar-bg);
             border-bottom: 1px solid var(--border);
             padding: 0 20px;
             align-items: center;
@@ -1338,7 +1345,8 @@
 
         function selectRepo(url, name, isPrivate) {
             document.getElementById('repoUrl').value = url;
-            document.getElementById('selected-repo-label.innerHTML') || (document.getElementById('selected-repo-label').innerHTML = `<i class="fa-solid ${isPrivate ? 'fa-lock' : 'fa-globe'}" style="color: ${isPrivate ? 'var(--warning)' : 'var(--success)'}; margin-right: 6px;"></i> ${name}`);
+            const label = document.getElementById('selected-repo-label');
+            if(label) label.innerHTML = `<i class="fa-solid ${isPrivate ? 'fa-lock' : 'fa-globe'}" style="color: ${isPrivate ? 'var(--warning)' : 'var(--success)'}; margin-right: 6px;"></i> ${name}`;
             document.getElementById('repo-dropdown-card').style.display = 'none';
         }
 
