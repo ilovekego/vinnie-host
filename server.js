@@ -181,6 +181,35 @@ app.get('/dashboard', async (req, res) => {
 const deployRoutes = require('./routes/deploy');
 app.use('/deploy', deployRoutes);
 
+// Link the Billing Logic
+const billingRoutes = require('./routes/billing');
+app.use('/finance', billingRoutes);
+
+// Automated Expiry Worker (Runs every 15 minutes)
+const cron = require('node-cron');
+const { Op } = require('sequelize');
+
+cron.schedule('*/15 * * * *', async () => {
+    try {
+        const expiredUsers = await User.findAll({
+            where: {
+                plan: { [Op.ne]: 'free' },
+                planExpiresAt: { [Op.lte]: new Date() }
+            }
+        });
+
+        for (const user of expiredUsers) {
+            user.plan = 'free';
+            user.deployLimit = 2;
+            user.planExpiresAt = null;
+            await user.save();
+            console.log(`Downgraded user ${user.id} to Free plan due to expiry.`);
+        }
+    } catch (e) {
+        console.error("Cron expiry check failed:", e);
+    }
+});
+
 app.get('/logout', (req, res, next) => {
     req.logout((err) => {
         if (err) return next(err);
