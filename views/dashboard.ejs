@@ -1,33 +1,41 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Vinnie Host - Modern backend hosting and cloud deployment. Deploy GitHub backends, manage environment variables, and view live logs.">
-    <meta name="keywords" content="cloud hosting, backend deployment, Heroku alternative, deploy bot, environment variables, serverless">
-    <meta name="author" content="Vinnie Host">
-    <meta property="og:title" content="Vinnie Host | Modern Cloud Dashboard">
-    <meta property="og:description" content="Deploy bots, APIs & backends fast directly from GitHub.">
-    <meta property="og:type" content="website">
+    <meta name="description" content="Vinnie Host - Modern backend hosting and cloud deployment platform.">
     <title>Vinnie Host | Modern Cloud Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <style>
-        :root {
+        :root[data-theme="dark"] {
             --bg: #000000;
             --bg-surface: #111111;
             --bg-elevated: #1a1a1a;
-            --border: #333333;
-            --border-focus: #555555;
+            --border: #222222;
+            --border-focus: #444444;
             --text-primary: #ededed;
-            --text-secondary: #a1a1aa;
+            --text-secondary: #888888;
             --accent: #ffffff;
             --accent-text: #000000;
             --success: #0070f3; 
             --warning: #f5a623;
             --danger: #e00;
-            --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            --font-mono: "Menlo", "Consolas", "Courier New", monospace;
+        }
+
+        :root[data-theme="light"] {
+            --bg: #ffffff;
+            --bg-surface: #f4f4f5;
+            --bg-elevated: #e4e4e7;
+            --border: #d4d4d8;
+            --border-focus: #a1a1aa;
+            --text-primary: #09090b;
+            --text-secondary: #71717a;
+            --accent: #09090b;
+            --accent-text: #ffffff;
+            --success: #0070f3; 
+            --warning: #f5a623;
+            --danger: #e00;
         }
 
         * {
@@ -35,37 +43,188 @@
             scroll-behavior: smooth;
         }
 
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: var(--bg);
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--border);
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--border-focus);
-        }
-
         body {
             margin: 0;
-            font-family: var(--font-sans);
+            font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background-color: var(--bg);
             color: var(--text-primary);
             min-height: 100vh;
+            display: flex;
             overflow-x: hidden;
-            line-height: 1.5;
+            transition: background-color 0.2s ease, color 0.2s ease;
         }
 
         a {
             color: inherit;
             text-decoration: none;
+        }
+
+        /* --- SIDEBAR NAVIGATION --- */
+        .sidebar {
+            width: 260px;
+            background-color: var(--bg);
+            border-right: 1px solid var(--border);
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            z-index: 1000;
+            padding: 20px 16px;
+        }
+
+        .sidebar-top {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            overflow-y: auto;
+            max-height: calc(100vh - 140px);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            padding: 0 8px;
+        }
+
+        .brand-icon {
+            width: 32px;
+            height: 32px;
+            display: grid;
+            place-items: center;
+            border-radius: 8px;
+            background-color: var(--accent);
+            color: var(--accent-text);
+        }
+
+        .nav-category {
+            font-size: 0.6875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            padding: 0 8px;
+            font-weight: 600;
+        }
+
+        .nav-group {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border-radius: 6px;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .nav-link i {
+            width: 16px;
+            text-align: center;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background-color: var(--bg-surface);
+            color: var(--text-primary);
+        }
+
+        /* --- SIDEBAR FOOTER & CONTROLS --- */
+        .sidebar-footer {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            border-top: 1px solid var(--border);
+            padding-top: 16px;
+        }
+
+        .theme-switcher {
+            display: flex;
+            background-color: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 3px;
+        }
+
+        .theme-btn {
+            flex: 1;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            padding: 6px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            transition: all 0.2s;
+        }
+
+        .theme-btn.active {
+            background-color: var(--bg);
+            color: var(--text-primary);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .sidebar-profile {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 12px;
+            background-color: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+
+        .sidebar-profile:hover {
+            border-color: var(--border-focus);
+        }
+
+        .profile-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            overflow: hidden;
+        }
+
+        .avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            object-fit: cover;
+        }
+
+        .profile-name {
+            font-size: 0.8125rem;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 120px;
+        }
+
+        /* --- MAIN CONTENT WRAPPER --- */
+        .main-content {
+            margin-left: 260px;
+            flex-grow: 1;
+            padding: 40px 5%;
+            max-width: calc(100% - 260px);
         }
 
         .glass {
@@ -74,118 +233,14 @@
             border-radius: 8px;
         }
 
-        .top-nav {
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            padding: 0 5%;
-            height: 64px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background-color: rgba(0, 0, 0, 0.8);
-            border-bottom: 1px solid var(--border);
-            backdrop-filter: blur(12px);
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-weight: 600;
-            font-size: 1.125rem;
-            letter-spacing: -0.02em;
-        }
-
-        .brand-icon {
-            width: 32px;
-            height: 32px;
-            display: grid;
-            place-items: center;
-            border-radius: 6px;
-            background-color: var(--accent);
-            color: var(--accent-text);
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 24px;
-            align-items: center;
-            margin-left: 32px;
-            flex-grow: 1;
-        }
-
-        .nav-links a {
-            color: var(--text-secondary);
-            font-size: 0.875rem;
-            transition: color 0.2s ease;
-        }
-
-        .nav-links a:hover {
-            color: var(--text-primary);
-        }
-
-        .nav-right {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .slot-pill {
-            border: 1px solid var(--border);
-            background-color: var(--bg-surface);
-            color: var(--text-secondary);
-            padding: 4px 12px;
-            border-radius: 999px;
-            font-size: 0.75rem;
-            font-weight: 500;
-        }
-
-        .avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            border: 1px solid var(--border);
-        }
-
-        .mobile-menu-btn {
-            display: none;
-            background: none;
-            border: none;
-            color: var(--text-primary);
-            font-size: 1.25rem;
-            cursor: pointer;
-            padding: 4px;
-        }
-
-        .mobile-menu {
-            display: none;
-            padding: 16px 5%;
-            background-color: var(--bg);
-            border-bottom: 1px solid var(--border);
-        }
-
-        .mobile-menu a {
-            display: block;
-            padding: 12px 0;
-            color: var(--text-secondary);
-            font-size: 0.875rem;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .mobile-menu a:last-child {
-            border-bottom: none;
-        }
-
         .container {
             width: 100%;
-            max-width: 1048px;
+            max-width: 1000px;
             margin: 0 auto;
-            padding: 0 24px;
         }
 
         .hero {
-            padding: 80px 0;
+            padding: 20px 0 60px;
             text-align: center;
         }
 
@@ -204,16 +259,15 @@
         }
 
         .hero h1 {
-            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
             font-weight: 700;
             letter-spacing: -0.04em;
             margin: 0 0 16px;
-            line-height: 1.1;
         }
 
         .hero p {
             color: var(--text-secondary);
-            font-size: 1.125rem;
+            font-size: 1.05rem;
             max-width: 600px;
             margin: 0 auto;
         }
@@ -259,11 +313,6 @@
             border-color: var(--border-focus);
         }
 
-        .btn-success {
-            background-color: var(--success);
-            color: white;
-        }
-
         .btn-danger {
             background-color: var(--bg);
             color: var(--danger);
@@ -279,7 +328,7 @@
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 16px;
-            margin: 0 0 64px;
+            margin: 0 0 48px;
         }
 
         .stat-card {
@@ -289,19 +338,18 @@
 
         .stat-card h3 {
             margin: 0;
-            font-size: 2rem;
+            font-size: 1.75rem;
             font-weight: 600;
-            letter-spacing: -0.02em;
         }
 
         .stat-card p {
             margin: 4px 0 0;
             color: var(--text-secondary);
-            font-size: 0.875rem;
+            font-size: 0.8125rem;
         }
 
         .section {
-            padding: 48px 0;
+            padding: 40px 0;
             border-top: 1px solid var(--border);
         }
 
@@ -314,9 +362,8 @@
 
         .section-title h2 {
             margin: 0;
-            font-size: 1.5rem;
+            font-size: 1.25rem;
             font-weight: 600;
-            letter-spacing: -0.02em;
         }
 
         .section-title p {
@@ -363,7 +410,7 @@
             border: 1px solid var(--border);
             background-color: var(--bg);
             color: var(--text-primary);
-            font-family: var(--font-mono);
+            font-family: monospace;
             font-size: 0.875rem;
             outline: none;
             transition: border-color 0.2s ease;
@@ -373,13 +420,67 @@
             border-color: var(--border-focus);
         }
 
-        .search-wrap {
-            display: flex;
-            gap: 8px;
+        /* --- RENDER-STYLE REPOSITORY SELECTOR CARD --- */
+        .repo-picker-box {
+            position: relative;
+            margin-bottom: 16px;
         }
-        
-        .search-wrap input {
-            flex-grow: 1;
+
+        .repo-select-trigger {
+            width: 100%;
+            height: 42px;
+            background-color: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-family: monospace;
+        }
+
+        .repo-dropdown-card {
+            position: absolute;
+            top: 48px;
+            left: 0;
+            right: 0;
+            background-color: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            z-index: 100;
+            display: none;
+            overflow: hidden;
+        }
+
+        .repo-search-input {
+            width: calc(100% - 16px);
+            margin: 8px;
+            height: 36px;
+        }
+
+        .repo-list-container {
+            max-height: 220px;
+            overflow-y: auto;
+            border-top: 1px solid var(--border);
+        }
+
+        .repo-option-item {
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.8125rem;
+            font-family: monospace;
+            cursor: pointer;
+            border-bottom: 1px solid var(--border);
+            transition: background 0.15s;
+        }
+
+        .repo-option-item:hover {
+            background-color: var(--bg-elevated);
         }
 
         .dynamic-area {
@@ -401,9 +502,8 @@
         }
 
         .identity {
-            font-family: var(--font-mono);
+            font-family: monospace;
             font-size: 0.875rem;
-            color: var(--text-primary);
         }
 
         .toggle-box {
@@ -444,11 +544,6 @@
             border-color: var(--border-focus);
             color: var(--text-primary);
         }
-        
-        .small-btn.danger:hover {
-            color: var(--danger);
-            border-color: var(--danger);
-        }
 
         .plan-grid {
             display: grid;
@@ -457,33 +552,33 @@
         }
 
         .plan-card {
-            padding: 24px;
+            padding: 20px;
             border-radius: 8px;
             background-color: var(--bg-surface);
             border: 1px solid var(--border);
         }
 
         .plan-card.featured {
-            border-color: var(--text-secondary);
+            border-color: var(--border-focus);
         }
 
         .plan-card h3 {
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 500;
-            margin: 0 0 8px;
+            margin: 0 0 6px;
         }
 
         .plan-price {
-            font-size: 1.5rem;
+            font-size: 1.25rem;
             font-weight: 600;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
         }
 
         .plan-card ul {
-            padding-left: 16px;
+            padding-left: 14px;
             margin: 0;
             color: var(--text-secondary);
-            font-size: 0.875rem;
+            font-size: 0.75rem;
         }
 
         .app-list {
@@ -513,7 +608,7 @@
         .app-url {
             color: var(--text-secondary);
             font-size: 0.75rem;
-            font-family: var(--font-mono);
+            font-family: monospace;
         }
         
         .app-actions {
@@ -529,7 +624,6 @@
             font-size: 0.75rem;
             font-weight: 500;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
             margin-bottom: 12px;
         }
 
@@ -549,10 +643,10 @@
 
         .terminal {
             padding: 16px;
-            font-family: var(--font-mono);
+            font-family: monospace;
             font-size: 0.8125rem;
             color: var(--text-secondary);
-            height: 400px;
+            height: 350px;
             overflow-y: auto;
             white-space: pre-wrap;
         }
@@ -560,32 +654,33 @@
         .feature-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 24px;
+            gap: 16px;
         }
 
         .feature-card {
-            padding: 24px;
+            padding: 20px;
         }
 
         .feature-card i {
-            font-size: 1.25rem;
+            font-size: 1.1rem;
             color: var(--text-primary);
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
 
         .feature-card h3 {
-            font-size: 1rem;
+            font-size: 0.9rem;
             font-weight: 500;
-            margin: 0 0 8px;
+            margin: 0 0 6px;
         }
 
         .feature-card p {
             color: var(--text-secondary);
-            font-size: 0.875rem;
+            font-size: 0.8125rem;
             margin: 0;
         }
 
-        .auth-overlay {
+        /* --- MODALS & OVERLAYS --- */
+        .auth-overlay, .settings-modal, .policy-modal {
             position: fixed;
             inset: 0;
             z-index: 9999;
@@ -596,20 +691,19 @@
             backdrop-filter: blur(4px);
         }
 
-        .auth-prompt {
+        .auth-prompt, .modal-card {
             width: 100%;
-            max-width: 400px;
+            max-width: 420px;
             padding: 32px;
             background-color: var(--bg-surface);
             border: 1px solid var(--border);
             border-radius: 8px;
-            text-align: center;
         }
 
-        .auth-prompt h2 {
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin: 0 0 8px;
+        .modal-card {
+            max-width: 650px;
+            max-height: 85vh;
+            overflow-y: auto;
         }
 
         .promo-text {
@@ -626,81 +720,67 @@
             background-color: var(--bg);
             border-radius: 6px;
         }
-        
-        .floating-success b {
-            display: block;
-            margin-bottom: 4px;
-            font-weight: 500;
-            font-size: 0.875rem;
+
+        .mobile-header {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background-color: var(--bg);
+            border-bottom: 1px solid var(--border);
+            padding: 0 20px;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 1100;
+        }
+
+        .mobile-menu-overlay {
+            position: fixed;
+            inset: 0;
+            background-color: rgba(0,0,0,0.7);
+            z-index: 1050;
+            display: none;
         }
 
         .footer {
             padding: 32px 0 64px;
             color: var(--text-secondary);
             text-align: center;
-            font-size: 0.875rem;
+            font-size: 0.8125rem;
             border-top: 1px solid var(--border);
+            margin-top: 40px;
         }
 
         @media (max-width: 1024px) {
-            .nav-links {
-                display: none;
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
             }
-            
-            .mobile-menu-btn {
-                display: block;
+            .sidebar.open {
+                transform: translateX(0);
             }
-            
-            .dashboard-grid {
-                grid-template-columns: 1fr;
+            .main-content {
+                margin-left: 0;
+                max-width: 100%;
+                padding: 80px 5% 40px;
             }
-        }
-
-        @media (max-width: 768px) {
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
+            .mobile-header {
+                display: flex;
             }
-            
-            .plan-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .feature-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .env-row {
-                grid-template-columns: 1fr;
-            }
-            
-            .app-item {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 16px;
-            }
-            
-            .search-wrap {
-                flex-direction: column;
-            }
-            
-            .search-wrap button {
-                width: 100%;
-            }
-        }
-        
-        @media (max-width: 480px) {
             .stats-grid, .plan-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: repeat(2, 1fr);
             }
-            
-            .slot-pill {
-                display: none;
+            .feature-grid, .dashboard-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
 <body>
 
+    <!-- SIGN-IN MODAL WITH TERMS CHECKBOX -->
     <div class="auth-overlay" id="auth-gate">
         <div class="auth-prompt">
             <div style="display: flex; justify-content: flex-end; margin-bottom: 16px;">
@@ -708,411 +788,439 @@
             </div>
             <h2>Access Vinnie Host</h2>
             <p class="promo-text">
-                Sign in to deploy backends, manage environment variables, view logs, and get live hosting URLs.
+                Sign in to deploy backends, configure environment variables, and stream live build logs.
             </p>
 
-            <a href="/auth/github" class="btn btn-secondary" style="width:100%; margin-bottom: 8px;">
+            <div style="margin-bottom: 16px; text-align: left; display: flex; align-items: flex-start; gap: 8px;">
+                <input type="checkbox" id="terms-check" style="width: 16px; height: 16px; margin-top: 3px; cursor: pointer;">
+                <label for="terms-check" style="font-size: 0.75rem; text-transform: none; color: var(--text-secondary); cursor: pointer; line-height: 1.4;">
+                    I agree to the <a href="javascript:void(0)" onclick="openModal('terms-modal')" style="color: var(--text-primary); text-decoration: underline;">Terms of Service</a> and <a href="javascript:void(0)" onclick="openModal('privacy-modal')" style="color: var(--text-primary); text-decoration: underline;">Privacy Policy</a>.
+                </label>
+            </div>
+
+            <button onclick="handleOAuth('/auth/github')" class="btn btn-secondary" style="width:100%; margin-bottom: 8px;">
                 <i class="fa-brands fa-github"></i> Continue with GitHub
-            </a>
-            <a href="/auth/google" class="btn btn-secondary" style="width:100%;">
+            </button>
+            <button onclick="handleOAuth('/auth/google')" class="btn btn-secondary" style="width:100%;">
                 <i class="fa-brands fa-google"></i> Continue with Google
-            </a>
+            </button>
         </div>
     </div>
 
-    <nav class="top-nav">
-        <a href="#home" class="brand">
+    <!-- ACCOUNT SETTINGS MODAL -->
+    <div class="settings-modal" id="settings-modal">
+        <div class="modal-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h3 style="margin:0; font-size: 1.15rem;">Account Settings</h3>
+                <button onclick="closeSettings()" class="small-btn"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <% if (user) { %>
+                <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 24px; padding: 16px; background: var(--bg); border-radius: 8px; border: 1px solid var(--border);">
+                    <img src="<%= user.avatar %>" style="width: 48px; height: 48px; border-radius: 50%; border: 1px solid var(--border);" alt="Avatar">
+                    <div>
+                        <div style="font-weight: 600; font-size: 0.95rem;"><%= user.displayName %></div>
+                        <div style="font-size: 0.75rem; color: var(--text-secondary); font-family: monospace; margin-top: 2px;">ID: #<%= user.id %> | Plan: <%= user.plan || 'free' %></div>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>Linked Authentication Profiles</label>
+                    <div style="display: flex; gap: 10px; margin-top: 8px;">
+                        <span class="btn btn-secondary" style="flex:1; justify-content: flex-start; cursor: default; font-size: 0.8125rem;">
+                            <i class="fa-brands fa-github" style="color: <%= user.githubId ? 'var(--success)' : 'var(--text-secondary)' %>;"></i> 
+                            <%= user.githubId ? 'GitHub Connected' : 'GitHub Unlinked' %>
+                        </span>
+                        <span class="btn btn-secondary" style="flex:1; justify-content: flex-start; cursor: default; font-size: 0.8125rem;">
+                            <i class="fa-brands fa-google" style="color: <%= user.googleId ? 'var(--success)' : 'var(--text-secondary)' %>;"></i> 
+                            <%= user.googleId ? 'Google Connected' : 'Google Unlinked' %>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="input-group" style="margin-top: 24px;">
+                    <label>Session Management</label>
+                    <a href="/logout" class="btn btn-danger" style="width: 100%; justify-content: center; margin-top: 8px;">
+                        <i class="fa-solid fa-right-from-bracket"></i> Sign Out from Vinnie Host
+                    </a>
+                </div>
+            <% } %>
+        </div>
+    </div>
+
+    <!-- TERMS OF SERVICE MODAL -->
+    <div class="policy-modal" id="terms-modal">
+        <div class="modal-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                <h3 style="margin:0;">Terms of Service</h3>
+                <button onclick="closeModal('terms-modal')" class="small-btn"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="promo-text" style="font-size: 0.8125rem; line-height: 1.6; max-height: 350px; overflow-y: auto;">
+                <p>Welcome to Vinnie Host. By accessing or using our cloud deployment platform, you agree to comply with and be bound by the following terms.</p>
+                <p><b>1. Acceptable Use:</b> You agree not to host malicious software, phishing tools, spam relays, or unauthorized copyrighted materials. Infrastructure abuse will result in immediate termination.</p>
+                <p><b>2. Service Limitations:</b> Free and paid tiers are provided with specific resource allocations. We maintain high availability standards but do not guarantee uninterrupted uptime.</p>
+                <p><b>3. Data Privacy:</b> Environment variables and tokens are encrypted securely in transit and at rest within our PostgreSQL database instances.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- PRIVACY POLICY MODAL -->
+    <div class="policy-modal" id="privacy-modal">
+        <div class="modal-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                <h3 style="margin:0;">Privacy Policy</h3>
+                <button onclick="closeModal('privacy-modal')" class="small-btn"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="promo-text" style="font-size: 0.8125rem; line-height: 1.6; max-height: 350px; overflow-y: auto;">
+                <p>Vinnie Host respects your privacy. This policy outlines how we collect and manage your information.</p>
+                <p><b>1. Information Collected:</b> We collect authentication profile data (Google/GitHub ID, display name, avatar) and optional access tokens required to list your repositories for deployment.</p>
+                <p><b>2. Token Security:</b> GitHub tokens are securely stored and utilized exclusively for fetching authorized repositories and establishing automated server links.</p>
+                <p><b>3. Third-Party Sharing:</b> We never sell, trade, or distribute your personal or repository data to external commercial entities.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- MOBILE TOP HEADER -->
+    <header class="mobile-header">
+        <div class="brand" style="padding:0;">
             <div class="brand-icon"><i class="fa-solid fa-cloud"></i></div>
             <span>Vinnie Host</span>
-        </a>
+        </div>
+        <button class="small-btn" onclick="toggleSidebar()">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+    </header>
+    <div class="mobile-menu-overlay" id="menu-overlay" onclick="toggleSidebar()"></div>
 
-        <div class="nav-links">
-            <a href="#deploy">Deploy</a>
-            <a href="#apps">Apps</a>
-            <a href="#logs">Logs</a>
-            <a href="#plans">Plans</a>
-            <a href="#features">Features</a>
-            <a href="#env">Env Vars</a>
-            <a href="#official">Official</a>
+    <!-- SIDEBAR NAVIGATION -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-top">
+            <div class="brand">
+                <div class="brand-icon"><i class="fa-solid fa-cloud"></i></div>
+                <span>Vinnie Host</span>
+            </div>
+
+            <div class="nav-group">
+                <div class="nav-category">Dashboard</div>
+                <a href="#home" class="nav-link active" onclick="toggleSidebar()"><i class="fa-solid fa-table-cells-large"></i> Overview</a>
+                <a href="#apps" class="nav-link" onclick="toggleSidebar()"><i class="fa-solid fa-server"></i> My Apps</a>
+                <a href="#deploy" class="nav-link" onclick="toggleSidebar()"><i class="fa-solid fa-cloud-arrow-up"></i> Deploy New App</a>
+            </div>
+
+            <div class="nav-group">
+                <div class="nav-category">Management</div>
+                <a href="#env" class="nav-link" onclick="toggleSidebar()"><i class="fa-solid fa-sliders"></i> Env Variables</a>
+                <a href="#logs" class="nav-link" onclick="toggleSidebar()"><i class="fa-solid fa-terminal"></i> Build Logs</a>
+                <a href="#plans" class="nav-link" onclick="toggleSidebar()"><i class="fa-solid fa-layer-group"></i> Plans & Tiers</a>
+            </div>
+
+            <div class="nav-group">
+                <div class="nav-category">Tools & Official</div>
+                <a href="#official" class="nav-link" onclick="toggleSidebar()"><i class="fa-solid fa-robot"></i> Official Bot</a>
+                <a href="#features" class="nav-link" onclick="toggleSidebar()"><i class="fa-solid fa-cubes"></i> Features</a>
+            </div>
         </div>
 
-        <div class="nav-right">
-            <span class="slot-pill">Global Units: <%= totalDeployed %>/100</span>
+        <!-- SIDEBAR FOOTER & CONTROLS -->
+        <div class="sidebar-footer">
+            <!-- Theme Switcher -->
+            <div class="theme-switcher">
+                <button class="theme-btn" onclick="setTheme('dark')" id="btn-dark" title="Dark Mode"><i class="fa-solid fa-moon"></i></button>
+                <button class="theme-btn" onclick="setTheme('light')" id="btn-light" title="Light Mode"><i class="fa-solid fa-sun"></i></button>
+                <button class="theme-btn" onclick="setTheme('system')" id="btn-system" title="System Theme"><i class="fa-solid fa-laptop"></i></button>
+            </div>
+
+            <!-- Profile / Settings Trigger -->
             <% if (user) { %>
-                <img src="<%= user.avatar %>" class="avatar" alt="User avatar">
-                <a href="/logout" class="small-btn" title="Logout"><i class="fa-solid fa-right-from-bracket"></i></a>
+                <div class="sidebar-profile" onclick="openSettings()">
+                    <div class="profile-info">
+                        <img src="<%= user.avatar %>" class="avatar" alt="Avatar">
+                        <span class="profile-name"><%= user.displayName %></span>
+                    </div>
+                    <i class="fa-solid fa-gear" style="font-size: 0.75rem; color: var(--text-secondary);"></i>
+                </div>
             <% } else { %>
-                <button onclick="triggerAuth()" class="btn btn-secondary">
+                <button onclick="triggerAuth()" class="btn btn-primary" style="width:100%; height:36px; font-size:0.8125rem;">
                     Sign In
                 </button>
             <% } %>
-            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
-                <i class="fa-solid fa-bars"></i>
-            </button>
         </div>
-    </nav>
+    </aside>
 
-    <div class="mobile-menu" id="mobile-menu">
-        <a href="#deploy" onclick="toggleMobileMenu()">Deploy</a>
-        <a href="#apps" onclick="toggleMobileMenu()">Apps</a>
-        <a href="#logs" onclick="toggleMobileMenu()">Logs</a>
-        <a href="#plans" onclick="toggleMobileMenu()">Plans</a>
-        <a href="#features" onclick="toggleMobileMenu()">Features</a>
-        <a href="#env" onclick="toggleMobileMenu()">Env Vars</a>
-        <a href="#official" onclick="toggleMobileMenu()">Official Bot</a>
-        <a href="#support" onclick="toggleMobileMenu()">Support</a>
-    </div>
-
-    <main class="container">
-        <section class="hero" id="home">
-            <span class="badge">Modern backend hosting</span>
-            <h1>Deploy backends fast.</h1>
-            <p>
-                Welcome, <b><%= user ? user.displayName : 'Guest' %></b>. Deploy GitHub repositories, 
-                manage environment variables, monitor build logs, and access clean app URLs.
-            </p>
-            <div class="hero-actions">
-                <button onclick="checkAndAction(() => document.getElementById('deploy').scrollIntoView())" class="btn btn-primary">
-                    Start Deploying
-                </button>
-                <a href="#plans" class="btn btn-secondary">
-                    View Plans
-                </a>
-            </div>
-        </section>
-
-        <section class="stats-grid" id="status">
-            <div class="stat-card glass">
-                <h3><%= totalDeployed %></h3>
-                <p>Active Global Units</p>
-            </div>
-            <div class="stat-card glass">
-                <h3 style="text-transform: capitalize;"><%= user ? (user.plan || 'free') : 'guest' %></h3>
-                <p>Current Plan</p>
-            </div>
-            <div class="stat-card glass">
-                <h3><%= user && user.deployedApps ? user.deployedApps.length : 0 %></h3>
-                <p>Your Deployed Apps</p>
-            </div>
-            <div class="stat-card glass">
-                <h3>24/7</h3>
-                <p>Cloud Access</p>
-            </div>
-        </section>
-
-        <section class="section" id="deploy">
-            <div class="section-title">
-                <div>
-                    <h2>Deploy Center</h2>
-                    <p>Paste any public GitHub repository, or connect your account for private repos.</p>
-                </div>
-            </div>
-
-            <div class="dashboard-grid">
-                <div class="card glass">
-                    <h3>Repository Scanner</h3>
-                    <p class="promo-text">
-                        If your repo has an <b>app.json</b>, variables are loaded automatically. Otherwise, add them manually.
-                    </p>
-
-                    <div class="input-group">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                            <label style="margin-bottom: 0;">GitHub Repository URL</label>
-                            <% if(user && !user.githubId) { %>
-                                <a href="/auth/github" class="small-btn" style="height: 28px; width: auto; padding: 0 12px; font-size: 0.75rem; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
-                                    <i class="fa-brands fa-github"></i> Connect GitHub
-                                </a>
-                            <% } %>
-                        </div>
-
-                        <% if(user && user.githubId) { %>
-                            <select id="repo-dropdown" style="margin-bottom: 12px; color: var(--text-secondary);" onchange="if(this.value) document.getElementById('repoUrl').value = this.value;">
-                                <option value="">Loading your repositories...</option>
-                            </select>
-                        <% } %>
-
-                        <div class="search-wrap">
-                            <input type="text" id="repoUrl" placeholder="https://github.com/user/public-repo" value="">
-                            <button class="btn btn-secondary" id="scan-btn" onclick="checkAndAction(scanBlueprint)">
-                                Scan
-                            </button>
-                        </div>
-                        <p class="promo-text" style="margin-top: 8px; font-size: 0.75rem;">
-                            Paste any public repository URL, or select from your connected GitHub account above.
-                        </p>
-                    </div>
-
-                    <div id="dynamic-area" class="dynamic-area">
-                        <div class="name-gen">
-                            <div>
-                                <label style="margin-bottom:4px;">App Identity</label>
-                                <div class="identity" id="display-app-name"></div>
-                            </div>
-                            <button class="small-btn" onclick="rotateName()" title="Rotate Identity">
-                                <i class="fa-solid fa-rotate"></i>
-                            </button>
-                        </div>
-
-                        <div class="toggle-box">
-                            <span>Force Procfile Startup</span>
-                            <input type="checkbox" id="procfile-toggle" checked>
-                        </div>
-
-                        <div id="dynamic-inputs" style="max-height: 310px; overflow-y: auto; margin: 16px 0;"></div>
-
-                        <button class="btn btn-secondary" style="width:100%; margin-bottom:12px;" onclick="addEnvRow()">
-                            Add Env Variable
-                        </button>
-
-                        <button class="btn btn-primary" id="launch-btn" style="width:100%;" disabled>
-                            Deploy Now
-                        </button>
-
-                        <div id="deploy-success" class="floating-success">
-                            <b>Deployment Started</b>
-                            <p class="promo-text" style="margin-bottom: 12px;">Your app is building. Use the logs panel to monitor.</p>
-                            <a id="live-url" class="app-url" target="_blank" style="display:block; margin-bottom:12px;"></a>
-                            <button class="btn btn-secondary" style="width:100%; height:32px; font-size:0.75rem;" onclick="copyLiveUrl()">
-                                Copy URL
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card glass" id="official">
-                    <h3>Official COMRADES-MD-BOT</h3>
-                    <p class="promo-text">
-                        Your plan reserves a deployment slot specifically for the official bot repository:
-                        <br><span style="font-family: var(--font-mono); color: var(--text-primary);">Vinny256/COMRADES-MD-BOT</span>
-                    </p>
-
-                    <button class="btn btn-secondary" style="width:100%; margin: 16px 0 24px;" onclick="checkAndAction(quickDeployOfficial)">
-                        Quick Deploy Bot
-                    </button>
-
-                    <hr style="border:0; border-top:1px solid var(--border); margin:0 0 24px;">
-
-                    <h3>Current Unit</h3>
-                    <% if(user && user.hasDeployed) { %>
-                        <div class="status"><span class="pulse"></span> ONLINE</div>
-                        <p class="promo-text" style="margin-bottom: 4px;">Latest ID: <span style="color:var(--text-primary);"><%= user.activeUnit %></span></p>
-                        <p class="app-url" style="margin-bottom: 16px;">https://<%= user.activeUnit %>.gathuo.app</p>
-                        <div style="display:flex; flex-direction:column; gap:8px;">
-                            <button class="btn btn-secondary" onclick="openApp('<%= user.activeUnit %>')">
-                                Open Live App
-                            </button>
-                            <button class="btn btn-secondary" onclick="copyText('https://<%= user.activeUnit %>.gathuo.app')">
-                                Copy URL
-                            </button>
-                            <button class="btn btn-secondary" onclick="loadConfig('<%= user.activeUnit %>')">
-                                Edit Env Vars
-                            </button>
-                            <button class="btn btn-danger" onclick="terminateUnit('<%= user.activeUnit %>')">
-                                Terminate Unit
-                            </button>
-                        </div>
-                    <% } else { %>
-                        <p class="promo-text">No active deployment yet.</p>
-                    <% } %>
-                </div>
-            </div>
-        </section>
-
-        <section class="section" id="apps">
-            <div class="section-title">
-                <div>
-                    <h2>Your Apps</h2>
-                    <p>Manage deployed units, edit configurations, or terminate instances.</p>
-                </div>
-            </div>
-
-            <% if(user && user.deployedApps && user.deployedApps.length) { %>
-                <div class="app-list">
-                    <% user.deployedApps.forEach(function(app) { %>
-                        <div class="app-item">
-                            <div>
-                                <div class="app-name"><%= app.appName %></div>
-                                <div class="app-url">https://<%= app.appName %>.gathuo.app</div>
-                                <div class="promo-text" style="margin-top: 4px;">Repo: <%= app.repoUrl %></div>
-                            </div>
-                            <div class="app-actions">
-                                <button class="small-btn" onclick="openApp('<%= app.appName %>')" title="Open App"><i class="fa-solid fa-arrow-up-right-from-square"></i></button>
-                                <button class="small-btn" onclick="copyText('https://<%= app.appName %>.gathuo.app')" title="Copy URL"><i class="fa-solid fa-copy"></i></button>
-                                <button class="small-btn" onclick="loadConfig('<%= app.appName %>')" title="Config"><i class="fa-solid fa-gear"></i></button>
-                                <button class="small-btn danger" onclick="terminateUnit('<%= app.appName %>')" title="Terminate"><i class="fa-solid fa-trash"></i></button>
-                                </div>
-                        </div>
-                    <% }) %>
-                </div>
-            <% } else { %>
-                <div class="card glass">
-                    <p class="promo-text">No apps deployed yet. Start by scanning a repo above.</p>
-                </div>
-            <% } %>
-        </section>
-
-        <section class="section" id="env">
-            <div class="section-title">
-                <div>
-                    <h2>Environment Variables</h2>
-                    <p>Edit configuration variables for your deployed applications.</p>
-                </div>
-            </div>
-
-            <div class="card glass">
-                <div class="input-group">
-                    <label>Target App</label>
-                    <input type="text" id="config-app-name" placeholder="Select 'Edit Env Vars' from your app list" readonly>
-                </div>
-
-                <div id="config-editor" style="margin: 24px 0;"></div>
-
-                <div style="display:flex; gap:12px;">
-                    <button class="btn btn-secondary" onclick="addConfigRow()">
-                        Add Variable
-                    </button>
-                    <button class="btn btn-primary" onclick="saveConfig()">
-                        Save Changes
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <section class="section" id="logs">
-            <div class="section-title">
-                <div>
-                    <h2>Build & Runtime Logs</h2>
-                    <p>Live terminal output from your latest active unit.</p>
-                </div>
-                <button class="btn btn-secondary" onclick="downloadLogs()">
-                    Save Output
-                </button>
-            </div>
-
-            <div class="terminal-wrapper">
-                <div class="terminal" id="log-stream"><% if(user && user.hasDeployed) { %>Connecting to stream for <%= user.activeUnit %>...<% } else { %>No active deployment detected. Deploy an app to view logs.<% } %></div>
-            </div>
-        </section>
-
-        <section class="section" id="plans">
-            <div class="section-title">
-                <div>
-                    <h2>Plans & Pricing</h2>
-                    <p>Scalable infrastructure tiers. All plans except Gold reserve one slot for the official bot.</p>
-                </div>
-            </div>
-
-            <div class="plan-grid">
-                <div class="plan-card">
-                    <h3>Free</h3>
-                    <div class="plan-price">KSh 0</div>
-                    <ul>
-                        <li>2 Backend Units</li>
-                        <li>1 Official Bot Slot</li>
-                        <li>Standard Logs</li>
-                    </ul>
-                </div>
-
-                <div class="plan-card">
-                    <h3>Startup</h3>
-                    <div class="plan-price">KSh 20</div>
-                    <ul>
-                        <li>5 Backend Units</li>
-                        <li>1 Official Bot Slot</li>
-                        <li>Config Editor</li>
-                    </ul>
-                </div>
-
-                <div class="plan-card featured">
-                    <h3>Silver</h3>
-                    <div class="plan-price">KSh 50</div>
-                    <ul>
-                        <li>10 Backend Units</li>
-                        <li>1 Official Bot Slot</li>
-                        <li>Enhanced Scaling</li>
-                    </ul>
-                </div>
-
-                <div class="plan-card">
-                    <h3>Platinum</h3>
-                    <div class="plan-price">KSh 100</div>
-                    <ul>
-                        <li>50 Backend Units</li>
-                        <li>1 Official Bot Slot</li>
-                        <li>Advanced Metrics</li>
-                    </ul>
-                </div>
-
-                <div class="plan-card">
-                    <h3>Gold</h3>
-                    <div class="plan-price">KSh 250</div>
-                    <ul>
-                        <li>Unlimited Units</li>
-                        <li>No Reserved Limits</li>
-                        <li>Priority Support</li>
-                    </ul>
-                </div>
-            </div>
-        </section>
-
-        <section class="section" id="features">
-            <div class="section-title">
-                <div>
-                    <h2>Platform Features</h2>
-                    <p>Engineered for streamlined developer workflows.</p>
-                </div>
-            </div>
-
-            <div class="feature-grid">
-                <div class="feature-card glass">
-                    <i class="fa-solid fa-code-branch"></i>
-                    <h3>Repo Scanner</h3>
-                    <p>Detect app.json or Procfile configurations automatically.</p>
-                </div>
-                <div class="feature-card glass">
-                    <i class="fa-solid fa-sliders"></i>
-                    <h3>Env Management</h3>
-                    <p>Update environment variables securely via the dashboard.</p>
-                </div>
-                <div class="feature-card glass">
-                    <i class="fa-solid fa-terminal"></i>
-                    <h3>Live Logs</h3>
-                    <p>Monitor real-time build and application runtime output.</p>
-                </div>
-                <div class="feature-card glass">
-                    <i class="fa-solid fa-globe"></i>
-                    <h3>Custom Subdomains</h3>
-                    <p>Apps are automatically assigned a unique gathuo.app URL.</p>
-                </div>
-                <div class="feature-card glass">
-                    <i class="fa-solid fa-server"></i>
-                    <h3>Isolated Units</h3>
-                    <p>Deployments run in securely isolated container instances.</p>
-                </div>
-                <div class="feature-card glass">
-                    <i class="fa-solid fa-shield-halved"></i>
-                    <h3>OAuth Protected</h3>
-                    <p>Secure account access via GitHub and Google authentication.</p>
-                </div>
-            </div>
-        </section>
-
-        <section class="section" id="support">
-            <div class="card glass" style="text-align: center;">
-                <h2 style="margin:0 0 8px; font-size:1.5rem; font-weight:600;">System Support</h2>
-                <p class="promo-text" style="max-width: 500px; margin: 0 auto 24px;">
-                    If a deployment fails, review the build logs, ensure your repository is public, 
-                    and verify all required environment variables are set correctly.
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="main-content">
+        <div class="container">
+            <section class="hero" id="home">
+                <span class="badge">Modern Cloud Infrastructure</span>
+                <h1>Deploy backends fast.</h1>
+                <p>
+                    Welcome, <b><%= user ? user.displayName : 'Guest' %></b>. Deploy GitHub repositories, 
+                    manage environment variables, monitor build logs, and access clean app URLs.
                 </p>
-                <button class="btn btn-secondary" onclick="document.getElementById('logs').scrollIntoView()">
-                    Access Logs
-                </button>
-            </div>
-        </section>
+                <div class="hero-actions">
+                    <button onclick="checkAndAction(() => document.getElementById('deploy').scrollIntoView())" class="btn btn-primary">
+                        Start Deploying
+                    </button>
+                    <a href="#plans" class="btn btn-secondary">
+                        View Plans
+                    </a>
+                </div>
+            </section>
 
-        <footer class="footer">
-            Vinnie Host © <%= new Date().getFullYear() %> — Cloud deployment platform.
-        </footer>
+            <section class="stats-grid" id="status">
+                <div class="stat-card glass">
+                    <h3><%= totalDeployed %></h3>
+                    <p>Global Units Active</p>
+                </div>
+                <div class="stat-card glass">
+                    <h3 style="text-transform: capitalize;"><%= user ? (user.plan || 'free') : 'guest' %></h3>
+                    <p>Current Tier</p>
+                </div>
+                <div class="stat-card glass">
+                    <h3><%= user && user.deployedApps ? user.deployedApps.length : 0 %></h3>
+                    <p>Your Deployed Apps</p>
+                </div>
+                <div class="stat-card glass">
+                    <h3>24/7</h3>
+                    <p>Cloud Availability</p>
+                </div>
+            </section>
+
+            <section class="section" id="deploy">
+                <div class="section-title">
+                    <div>
+                        <h2>Deploy Center</h2>
+                        <p>Search and select public or private repositories, or paste a URL directly.</p>
+                    </div>
+                </div>
+
+                <div class="dashboard-grid">
+                    <div class="card glass">
+                        <h3>Repository Scanner</h3>
+                        <p class="promo-text">
+                            Detects <b>app.json</b> blueprints or <b>Procfile</b> configuration automatically.
+                        </p>
+
+                        <div class="input-group">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                <label style="margin-bottom: 0;">Repository Source</label>
+                                <% if(user && !user.githubId) { %>
+                                    <a href="/auth/github" class="small-btn" style="height: 26px; width: auto; padding: 0 10px; font-size: 0.7rem; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
+                                        <i class="fa-brands fa-github"></i> Connect GitHub
+                                    </a>
+                                <% } %>
+                            </div>
+
+                            <!-- RENDER-STYLE INTERACTIVE REPO SEARCH CARD -->
+                            <% if(user && user.githubId) { %>
+                                <div class="repo-picker-box" id="repo-picker">
+                                    <div class="repo-select-trigger" onclick="toggleRepoDropdown()">
+                                        <span id="selected-repo-label" style="color: var(--text-secondary);">Select repository...</span>
+                                        <i class="fa-solid fa-chevron-down" style="font-size: 0.75rem; color: var(--text-secondary);"></i>
+                                    </div>
+                                    <div class="repo-dropdown-card" id="repo-dropdown-card">
+                                        <input type="text" class="repo-search-input" id="repo-search-box" placeholder="Search repositories..." oninput="filterRepos(this.value)">
+                                        <div class="repo-list-container" id="repo-list-options">
+                                            <div class="repo-option-item" style="color: var(--text-secondary);">Loading repositories...</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            <% } %>
+
+                            <div class="search-wrap">
+                                <input type="text" id="repoUrl" placeholder="https://github.com/user/repo" value="">
+                                <button class="btn btn-secondary" id="scan-btn" onclick="checkAndAction(scanBlueprint)">
+                                    Scan
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id="dynamic-area" class="dynamic-area">
+                            <div class="name-gen">
+                                <div>
+                                    <label style="margin-bottom:4px;">App Identity</label>
+                                    <div class="identity" id="display-app-name"></div>
+                                </div>
+                                <button class="small-btn" onclick="rotateName()" title="Rotate Identity">
+                                    <i class="fa-solid fa-rotate"></i>
+                                </button>
+                            </div>
+
+                            <div class="toggle-box">
+                                <span>Force Procfile Startup</span>
+                                <input type="checkbox" id="procfile-toggle" checked>
+                            </div>
+
+                            <div id="dynamic-inputs" style="max-height: 280px; overflow-y: auto; margin: 16px 0;"></div>
+
+                            <button class="btn btn-secondary" style="width:100%; margin-bottom:12px;" onclick="addEnvRow()">
+                                Add Env Variable
+                            </button>
+
+                            <button class="btn btn-primary" id="launch-btn" style="width:100%;" disabled>
+                                Deploy Now
+                            </button>
+
+                            <div id="deploy-success" class="floating-success">
+                                <b>Deployment Started</b>
+                                <p class="promo-text" style="margin-bottom: 12px;">Your app is building. Use the logs panel to monitor.</p>
+                                <a id="live-url" class="app-url" target="_blank" style="display:block; margin-bottom:12px;"></a>
+                                <button class="btn btn-secondary" style="width:100%; height:32px; font-size:0.75rem;" onclick="copyLiveUrl()">
+                                    Copy URL
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card glass" id="official">
+                        <h3>Official COMRADES-MD-BOT</h3>
+                        <p class="promo-text">
+                            Reserved official slot repository:
+                            <br><span style="font-family: monospace; color: var(--text-primary);">Vinny256/COMRADES-MD-BOT</span>
+                        </p>
+
+                        <button class="btn btn-secondary" style="width:100%; margin: 12px 0 20px;" onclick="checkAndAction(quickDeployOfficial)">
+                            Quick Deploy Bot
+                        </button>
+
+                        <hr style="border:0; border-top:1px solid var(--border); margin:0 0 20px;">
+
+                        <h3>Current Unit</h3>
+                        <% if(user && user.hasDeployed) { %>
+                            <div class="status"><span class="pulse"></span> ONLINE</div>
+                            <p class="promo-text" style="margin-bottom: 4px;">Latest ID: <span style="color:var(--text-primary);"><%= user.activeUnit %></span></p>
+                            <p class="app-url" style="margin-bottom: 16px;">https://<%= user.activeUnit %>.gathuo.app</p>
+                            <div style="display:flex; flex-direction:column; gap:8px;">
+                                <button class="btn btn-secondary" onclick="openApp('<%= user.activeUnit %>')">Open Live App</button>
+                                <button class="btn btn-secondary" onclick="copyText('https://<%= user.activeUnit %>.gathuo.app')">Copy URL</button>
+                                <button class="btn btn-secondary" onclick="loadConfig('<%= user.activeUnit %>')">Edit Env Vars</button>
+                                <button class="btn btn-danger" onclick="terminateUnit('<%= user.activeUnit %>')">Terminate Unit</button>
+                            </div>
+                        <% } else { %>
+                            <p class="promo-text">No active deployment yet.</p>
+                        <% } %>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section" id="apps">
+                <div class="section-title">
+                    <div>
+                        <h2>Your Apps</h2>
+                        <p>Manage deployed units, edit configurations, or terminate instances.</p>
+                    </div>
+                </div>
+
+                <% if(user && user.deployedApps && user.deployedApps.length) { %>
+                    <div class="app-list">
+                        <% user.deployedApps.forEach(function(app) { %>
+                            <div class="app-item">
+                                <div>
+                                    <div class="app-name"><%= app.appName %></div>
+                                    <div class="app-url">https://<%= app.appName %>.gathuo.app</div>
+                                    <div class="promo-text" style="margin-top: 4px;">Repo: <%= app.repoUrl %></div>
+                                </div>
+                                <div class="app-actions">
+                                    <button class="small-btn" onclick="openApp('<%= app.appName %>')" title="Open App"><i class="fa-solid fa-arrow-up-right-from-square"></i></button>
+                                    <button class="small-btn" onclick="copyText('https://<%= app.appName %>.gathuo.app')" title="Copy URL"><i class="fa-solid fa-copy"></i></button>
+                                    <button class="small-btn" onclick="loadConfig('<%= app.appName %>')" title="Config"><i class="fa-solid fa-gear"></i></button>
+                                    <button class="small-btn danger" onclick="terminateUnit('<%= app.appName %>')" title="Terminate"><i class="fa-solid fa-trash"></i></button>
+                                </div>
+                            </div>
+                        <% }) %>
+                    </div>
+                <% } else { %>
+                    <div class="card glass">
+                        <p class="promo-text">No apps deployed yet. Start by scanning a repo above.</p>
+                    </div>
+                <% } %>
+            </section>
+
+            <section class="section" id="env">
+                <div class="section-title">
+                    <div>
+                        <h2>Environment Variables</h2>
+                        <p>Configure keys for your deployed containers.</p>
+                    </div>
+                </div>
+
+                <div class="card glass">
+                    <div class="input-group">
+                        <label>Target App</label>
+                        <input type="text" id="config-app-name" placeholder="Select 'Edit Env Vars' from your app list" readonly>
+                    </div>
+
+                    <div id="config-editor" style="margin: 20px 0;"></div>
+
+                    <div style="display:flex; gap:12px;">
+                        <button class="btn btn-secondary" onclick="addConfigRow()">Add Variable</button>
+                        <button class="btn btn-primary" onclick="saveConfig()">Save Changes</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section" id="logs">
+                <div class="section-title">
+                    <div>
+                        <h2>Build & Runtime Logs</h2>
+                        <p>Live terminal stream output.</p>
+                    </div>
+                </div>
+
+                <div class="terminal-wrapper">
+                    <div class="terminal" id="log-stream"><% if(user && user.hasDeployed) { %>Connecting to stream for <%= user.activeUnit %>...<% } else { %>No active deployment detected.<% } %></div>
+                </div>
+            </section>
+
+            <section class="section" id="plans">
+                <div class="section-title">
+                    <div>
+                        <h2>Plans & Pricing</h2>
+                        <p>Scalable infrastructure tiers.</p>
+                    </div>
+                </div>
+
+                <div class="plan-grid">
+                    <div class="plan-card">
+                        <h3>Free</h3>
+                        <div class="plan-price">KSh 0</div>
+                        <ul><li>2 Backend Units</li><li>1 Official Bot Slot</li></ul>
+                    </div>
+                    <div class="plan-card">
+                        <h3>Startup</h3>
+                        <div class="plan-price">KSh 20</div>
+                        <ul><li>5 Backend Units</li><li>1 Official Bot Slot</li></ul>
+                    </div>
+                    <div class="plan-card featured">
+                        <h3>Silver</h3>
+                        <div class="plan-price">KSh 50</div>
+                        <ul><li>10 Backend Units</li><li>1 Official Bot Slot</li></ul>
+                    </div>
+                    <div class="plan-card">
+                        <h3>Platinum</h3>
+                        <div class="plan-price">KSh 100</div>
+                        <ul><li>50 Backend Units</li><li>1 Official Bot Slot</li></ul>
+                    </div>
+                    <div class="plan-card">
+                        <h3>Gold</h3>
+                        <div class="plan-price">KSh 250</div>
+                        <ul><li>Unlimited Units</li><li>No Reserved Limits</li></ul>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section" id="features">
+                <div class="section-title"><div><h2>Platform Features</h2></div></div>
+                <div class="feature-grid">
+                    <div class="feature-card glass"><i class="fa-solid fa-code-branch"></i><h3>Repo Scanner</h3><p>Detect app.json or Procfile automatically.</p></div>
+                    <div class="feature-card glass"><i class="fa-solid fa-terminal"></i><h3>Live Logs</h3><p>Monitor real-time runtime terminal logs.</p></div>
+                    <div class="feature-card glass"><i class="fa-solid fa-globe"></i><h3>Custom Subdomains</h3><p>Automated app subdomains.</p></div>
+                </div>
+            </section>
+
+            <footer class="footer">
+                Vinnie Host © <%= new Date().getFullYear() %> — Cloud deployment platform.
+            </footer>
+        </div>
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
@@ -1120,39 +1228,57 @@
         const isLoggedIn = <%= user ? 'true' : 'false' %>;
         let currentGeneratedName = `vinnie-${Math.random().toString(36).substring(2, 7)}`;
         let latestLiveUrl = "";
+        let globalRepos = [];
 
-        function triggerAuth() {
-            document.getElementById('auth-gate').style.display = 'flex';
+        // --- THEME ENGINE ---
+        function setTheme(theme) {
+            localStorage.setItem('vinnie_theme', theme);
+            document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+            if (theme === 'system') {
+                document.getElementById('btn-system').classList.add('active');
+                const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+            } else {
+                document.getElementById(`btn-${theme}`).classList.add('active');
+                document.documentElement.setAttribute('data-theme', theme);
+            }
         }
 
-        function closeAuth() {
-            document.getElementById('auth-gate').style.display = 'none';
+        (function initTheme() {
+            const saved = localStorage.getItem('vinnie_theme') || 'dark';
+            setTheme(saved);
+        })();
+
+        // --- AUTH & MODALS ---
+        function triggerAuth() { document.getElementById('auth-gate').style.display = 'flex'; }
+        function closeAuth() { document.getElementById('auth-gate').style.display = 'none'; }
+        function openSettings() { document.getElementById('settings-modal').style.display = 'flex'; }
+        function closeSettings() { document.getElementById('settings-modal').style.display = 'none'; }
+        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+        function handleOAuth(url) {
+            const check = document.getElementById('terms-check');
+            if (!check || !check.checked) {
+                showToast("You must accept the Terms of Service and Privacy Policy to continue.", "var(--danger)");
+                return;
+            }
+            window.location.href = url;
         }
 
-        function toggleMobileMenu() {
-            const menu = document.getElementById('mobile-menu');
-            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('menu-overlay');
+            const isOpen = sidebar.classList.toggle('open');
+            overlay.style.display = isOpen ? 'block' : 'none';
         }
 
-        function checkAndAction(cb) {
-            isLoggedIn ? cb() : triggerAuth();
-        }
+        function checkAndAction(cb) { isLoggedIn ? cb() : triggerAuth(); }
 
         function showToast(text, color = "var(--border-focus)") {
             Toastify({
-                text,
-                duration: 3200,
-                gravity: "bottom",
-                position: "right",
-                style: {
-                    background: "var(--bg-surface)",
-                    color: "var(--text-primary)",
-                    border: `1px solid ${color}`,
-                    borderRadius: "6px",
-                    boxShadow: "0 4px 12px rgba(0,0,0,0.5)",
-                    fontFamily: "var(--font-sans)",
-                    fontSize: "0.875rem"
-                }
+                text, duration: 3200, gravity: "bottom", position: "right",
+                style: { background: "var(--bg-surface)", color: "var(--text-primary)", border: `1px solid ${color}`, borderRadius: "6px", fontSize: "0.875rem" }
             }).showToast();
         }
 
@@ -1171,38 +1297,85 @@
             scanBlueprint();
         }
 
+        // --- RENDER-STYLE REPO PICKER LOGIC ---
+        function toggleRepoDropdown() {
+            const card = document.getElementById('repo-dropdown-card');
+            if (!card) return;
+            const isOpen = card.style.display === 'block';
+            card.style.display = isOpen ? 'none' : 'block';
+            if (!isOpen) document.getElementById('repo-search-box').focus();
+        }
+
+        window.addEventListener('click', (e) => {
+            const picker = document.getElementById('repo-picker');
+            if (picker && !picker.contains(e.target)) {
+                const card = document.getElementById('repo-dropdown-card');
+                if (card) card.style.display = 'none';
+            }
+        });
+
+        function filterRepos(query) {
+            const container = document.getElementById('repo-list-options');
+            if (!container) return;
+            const filtered = globalRepos.filter(r => r.name.toLowerCase().includes(query.toLowerCase()));
+            renderRepoOptions(filtered);
+        }
+
+        function renderRepoOptions(repos) {
+            const container = document.getElementById('repo-list-options');
+            if (!container) return;
+            if (repos.length === 0) {
+                container.innerHTML = '<div class="repo-option-item" style="color: var(--text-secondary);">No repositories found</div>';
+                return;
+            }
+            container.innerHTML = repos.map(repo => `
+                <div class="repo-option-item" onclick="selectRepo('${repo.url}', '${repo.name}', ${repo.private})">
+                    <i class="fa-solid ${repo.private ? 'fa-lock' : 'fa-globe'}" style="color: ${repo.private ? 'var(--warning)' : 'var(--success)'}; width: 14px;"></i>
+                    <span>${repo.name}</span>
+                </div>
+            `).join('');
+        }
+
+        function selectRepo(url, name, isPrivate) {
+            document.getElementById('repoUrl').value = url;
+            document.getElementById('selected-repo-label.innerHTML') || (document.getElementById('selected-repo-label').innerHTML = `<i class="fa-solid ${isPrivate ? 'fa-lock' : 'fa-globe'}" style="color: ${isPrivate ? 'var(--warning)' : 'var(--success)'}; margin-right: 6px;"></i> ${name}`);
+            document.getElementById('repo-dropdown-card').style.display = 'none';
+        }
+
+        <% if(user && user.githubId) { %>
+            fetch('/deploy/github-repos')
+                .then(res => res.json())
+                .then(data => {
+                    if(data.success && data.repos) {
+                        globalRepos = data.repos;
+                        renderRepoOptions(globalRepos);
+                    } else {
+                        document.getElementById('repo-list-options').innerHTML = '<div class="repo-option-item">Failed to load repos</div>';
+                    }
+                })
+                .catch(() => {
+                    document.getElementById('repo-list-options').innerHTML = '<div class="repo-option-item">Network error loading repos</div>';
+                });
+        <% } %>
+
         async function scanBlueprint() {
             const repoUrl = document.getElementById('repoUrl').value.trim();
             if (!repoUrl) return showToast("Enter a repository URL", "var(--danger)");
-
             const scanBtn = document.getElementById('scan-btn');
-            scanBtn.disabled = true;
-            scanBtn.innerText = 'Scanning...';
-
+            scanBtn.disabled = true; scanBtn.innerText = 'Scanning...';
             try {
-                const res = await fetch('/deploy/scan', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ repoUrl })
-                });
-
+                const res = await fetch('/deploy/scan', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ repoUrl }) });
                 const data = await res.json();
-
                 if (data.success) {
                     const inputContainer = document.getElementById('dynamic-inputs');
                     inputContainer.innerHTML = '';
-
                     rotateName();
-
                     if (!data.requirements || data.requirements.length === 0) {
                         inputContainer.innerHTML = '<p class="promo-text">No config variables found. Add them manually below.</p>';
                         addEnvRow();
                     } else {
-                        data.requirements.forEach(item => {
-                            if (item.key !== 'HEROKU_API_KEY') createVarInput(inputContainer, item.key, item.value, item.description);
-                        });
+                        data.requirements.forEach(item => { if (item.key !== 'HEROKU_API_KEY') createVarInput(inputContainer, item.key, item.value, item.description); });
                     }
-
                     document.getElementById('dynamic-area').style.display = 'block';
                     document.getElementById('launch-btn').onclick = () => launchToGrid(data.repo);
                     validateForm();
@@ -1211,220 +1384,112 @@
                     document.getElementById('dynamic-area').style.display = 'block';
                     document.getElementById('dynamic-inputs').innerHTML = '<p class="promo-text">No configuration file found. Add variables manually.</p>';
                     document.getElementById('launch-btn').onclick = () => launchToGrid(repoUrl);
-                    rotateName();
-                    validateForm();
+                    rotateName(); validateForm();
                     showToast(data.message || "Manual mode ready", "var(--warning)");
                 }
-            } catch (e) {
-                showToast("Scan failed", "var(--danger)");
-            } finally {
-                scanBtn.disabled = false;
-                scanBtn.innerText = 'Scan';
-            }
+            } catch (e) { showToast("Scan failed", "var(--danger)"); }
+            finally { scanBtn.disabled = false; scanBtn.innerText = 'Scan'; }
         }
 
         function createVarInput(container, key, val, desc) {
             const div = document.createElement('div');
             div.className = 'env-row';
-            div.innerHTML = `
-                <input type="text" class="env-key-input" value="${escapeHtml(key || '')}" placeholder="KEY">
-                <input type="text" class="env-var-input" value="${escapeHtml(val || '')}" placeholder="${escapeHtml(desc || 'VALUE')}">
-                <button class="small-btn" onclick="this.parentElement.remove(); validateForm();"><i class="fa-solid fa-trash"></i></button>
-            `;
+            div.innerHTML = `<input type="text" class="env-key-input" value="${escapeHtml(key || '')}" placeholder="KEY"><input type="text" class="env-var-input" value="${escapeHtml(val || '')}" placeholder="${escapeHtml(desc || 'VALUE')}"><button class="small-btn" onclick="this.parentElement.remove(); validateForm();"><i class="fa-solid fa-trash"></i></button>`;
             container.appendChild(div);
             div.querySelectorAll('input').forEach(input => input.addEventListener('input', validateForm));
         }
 
-        function addEnvRow() {
-            const container = document.getElementById('dynamic-inputs');
-            createVarInput(container, "", "", "");
-            validateForm();
-        }
+        function addEnvRow() { createVarInput(document.getElementById('dynamic-inputs'), "", "", ""); validateForm(); }
 
         function validateForm() {
             const launchBtn = document.getElementById('launch-btn');
             if (!launchBtn) return;
-
-            const rows = document.querySelectorAll('#dynamic-inputs .env-row');
             let valid = true;
-
-            rows.forEach(row => {
-                const key = row.querySelector('.env-key-input')?.value.trim();
-                const value = row.querySelector('.env-var-input')?.value.trim();
-                if (!key || !value) valid = false;
+            document.querySelectorAll('#dynamic-inputs .env-row').forEach(row => {
+                if (!row.querySelector('.env-key-input')?.value.trim() || !row.querySelector('.env-var-input')?.value.trim()) valid = false;
             });
-
             launchBtn.disabled = !valid;
         }
 
         async function launchToGrid(repoUrl) {
             const configVars = { "APP_NAME": currentGeneratedName };
-
             document.querySelectorAll('#dynamic-inputs .env-row').forEach(row => {
-                const key = row.querySelector('.env-key-input')?.value.trim();
-                const value = row.querySelector('.env-var-input')?.value.trim();
-                if (key) configVars[key] = value;
+                const k = row.querySelector('.env-key-input')?.value.trim();
+                const v = row.querySelector('.env-var-input')?.value.trim();
+                if (k) configVars[k] = v;
             });
-
-            if (document.getElementById('procfile-toggle').checked) {
-                configVars["USE_PROCFILE"] = "true";
-            }
+            if (document.getElementById('procfile-toggle').checked) configVars["USE_PROCFILE"] = "true";
 
             const launchBtn = document.getElementById('launch-btn');
-            launchBtn.disabled = true;
-            launchBtn.innerText = 'Deploying...';
-
+            launchBtn.disabled = true; launchBtn.innerText = 'Deploying...';
             try {
-                const res = await fetch('/deploy/launch', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ repoUrl, configVars })
-                });
-
+                const res = await fetch('/deploy/launch', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ repoUrl, configVars }) });
                 const data = await res.json();
-
                 if (data.success) {
                     latestLiveUrl = data.customUrl || `https://${data.appName}.gathuo.app`;
                     document.getElementById('deploy-success').style.display = 'block';
                     document.getElementById('live-url').innerText = latestLiveUrl;
                     document.getElementById('live-url').href = latestLiveUrl;
                     showToast("Deployment initialized", "var(--success)");
-
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 2500);
-                } else {
-                    showToast(data.message || "Deployment failed", "var(--danger)");
-                }
-            } catch (e) {
-                showToast("Request failed", "var(--danger)");
-            } finally {
-                launchBtn.disabled = false;
-                launchBtn.innerText = 'Deploy Now';
-            }
+                    setTimeout(() => window.location.reload(), 2500);
+                } else { showToast(data.message || "Deployment failed", "var(--danger)"); }
+            } catch (e) { showToast("Request failed", "var(--danger)"); }
+            finally { launchBtn.disabled = false; launchBtn.innerText = 'Deploy Now'; }
         }
 
         async function terminateUnit(appName) {
             if (!confirm("Terminate this unit permanently?")) return;
-
-            const res = await fetch('/deploy/terminate', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ appName })
-            });
-
+            const res = await fetch('/deploy/terminate', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ appName }) });
             const data = await res.json();
-
-            if (data.success) {
-                showToast("Unit terminated", "var(--success)");
-                setTimeout(() => window.location.reload(), 1000);
-            } else {
-                showToast(data.message || "Termination failed", "var(--danger)");
-            }
+            if (data.success) { showToast("Unit terminated", "var(--success)"); setTimeout(() => window.location.reload(), 1000); }
+            else { showToast(data.message || "Termination failed", "var(--danger)"); }
         }
 
-        function openApp(appName) {
-            window.open(`https://${appName}.gathuo.app`, '_blank');
-        }
-
-        function copyText(text) {
-            navigator.clipboard.writeText(text);
-            showToast("Copied to clipboard", "var(--border-focus)");
-        }
-
-        function copyLiveUrl() {
-            if (!latestLiveUrl) return;
-            copyText(latestLiveUrl);
-        }
+        function openApp(appName) { window.open(`https://${appName}.gathuo.app`, '_blank'); }
+        function copyText(text) { navigator.clipboard.writeText(text); showToast("Copied to clipboard", "var(--border-focus)"); }
 
         async function loadConfig(appName) {
             document.getElementById('env').scrollIntoView();
             document.getElementById('config-app-name').value = appName;
             const editor = document.getElementById('config-editor');
             editor.innerHTML = '<p class="promo-text">Fetching configuration...</p>';
-
             try {
                 const res = await fetch(`/deploy/config/${appName}`);
                 const data = await res.json();
-
                 editor.innerHTML = "";
                 const config = data.config || {};
-
-                Object.keys(config).forEach(key => {
-                    addConfigRow(key, config[key]);
-                });
-
-                if (Object.keys(config).length === 0) {
-                    editor.innerHTML = '<p class="promo-text">No variables found. Add new ones below.</p>';
-                }
-
+                Object.keys(config).forEach(k => addConfigRow(k, config[k]));
+                if (Object.keys(config).length === 0) editor.innerHTML = '<p class="promo-text">No variables found. Add new ones below.</p>';
                 showToast("Configuration loaded", "var(--success)");
-            } catch (e) {
-                editor.innerHTML = '<p class="promo-text" style="color:var(--danger);">Failed to load configuration.</p>';
-            }
+            } catch (e) { editor.innerHTML = '<p class="promo-text" style="color:var(--danger);">Failed to load configuration.</p>'; }
         }
 
         function addConfigRow(key = "", value = "") {
-            const editor = document.getElementById('config-editor');
             const row = document.createElement('div');
             row.className = 'env-row';
-            row.innerHTML = `
-                <input type="text" class="config-key" value="${escapeHtml(key)}" placeholder="KEY">
-                <input type="text" class="config-value" value="${escapeHtml(value)}" placeholder="VALUE">
-                <button class="small-btn" onclick="this.parentElement.remove();"><i class="fa-solid fa-trash"></i></button>
-            `;
-            editor.appendChild(row);
+            row.innerHTML = `<input type="text" class="config-key" value="${escapeHtml(key)}" placeholder="KEY"><input type="text" class="config-value" value="${escapeHtml(value)}" placeholder="VALUE"><button class="small-btn" onclick="this.parentElement.remove();"><i class="fa-solid fa-trash"></i></button>`;
+            document.getElementById('config-editor').appendChild(row);
         }
 
         async function saveConfig() {
             const appName = document.getElementById('config-app-name').value.trim();
             if (!appName) return showToast("Select an app to configure", "var(--danger)");
-
             const body = {};
             document.querySelectorAll('#config-editor .env-row').forEach(row => {
-                const key = row.querySelector('.config-key')?.value.trim();
-                const value = row.querySelector('.config-value')?.value.trim();
-                if (key) body[key] = value;
+                const k = row.querySelector('.config-key')?.value.trim();
+                const v = row.querySelector('.config-value')?.value.trim();
+                if (k) body[k] = v;
             });
-
             try {
-                const res = await fetch(`/deploy/config/${appName}`, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify(body)
-                });
+                const res = await fetch(`/deploy/config/${appName}`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body) });
                 const data = await res.json();
-
-                if (data.updated || data.success) {
-                    showToast("Configuration saved", "var(--success)");
-                } else {
-                    showToast("Failed to save configuration", "var(--danger)");
-                }
-            } catch (e) {
-                showToast("Network error", "var(--danger)");
-            }
-        }
-
-        function downloadLogs() {
-            const logElement = document.getElementById('log-stream');
-            if (!logElement) return;
-
-            const blob = new Blob([logElement.innerText], { type: 'text/plain' });
-            const elem = window.document.createElement('a');
-            elem.href = window.URL.createObjectURL(blob);
-            elem.download = 'vinnie-host-logs.txt';
-            document.body.appendChild(elem);
-            elem.click();
-            document.body.removeChild(elem);
+                if (data.updated || data.success) showToast("Configuration saved", "var(--success)");
+                else showToast("Failed to save configuration", "var(--danger)");
+            } catch (e) { showToast("Network error", "var(--danger)"); }
         }
 
         function escapeHtml(str) {
-            return String(str)
-                .replaceAll('&', '&amp;')
-                .replaceAll('<', '&lt;')
-                .replaceAll('>', '&gt;')
-                .replaceAll('"', '&quot;')
-                .replaceAll("'", '&#039;');
+            return String(str).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#039;');
         }
 
         <% if(user && user.hasDeployed) { %>
@@ -1439,29 +1504,8 @@
                             lb.innerText = data.logs;
                             lb.scrollTop = lb.scrollHeight;
                         }
-                    })
-                    .catch(() => {});
+                    }).catch(() => {});
             }, 5000);
-        <% } %>
-
-        <% if(user && user.githubId) { %>
-            fetch('/deploy/github-repos')
-                .then(res => res.json())
-                .then(data => {
-                    const select = document.getElementById('repo-dropdown');
-                    if(data.success && data.repos && data.repos.length > 0) {
-                        select.innerHTML = '<option value="">-- Select from your GitHub (Auto-fills below) --</option>';
-                        data.repos.forEach(repo => {
-                            select.innerHTML += `<option value="${repo.url}">${repo.private ? '🔒' : '🌎'} ${repo.name}</option>`;
-                        });
-                    } else {
-                        select.innerHTML = '<option value="">No repositories found. Paste URL below.</option>';
-                    }
-                })
-                .catch(() => {
-                    const select = document.getElementById('repo-dropdown');
-                    if(select) select.innerHTML = '<option value="">Failed to load repos. Paste URL below.</option>';
-                });
         <% } %>
     </script>
 </body>
