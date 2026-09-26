@@ -21,6 +21,7 @@
             --success: #0070f3; 
             --warning: #f5a623;
             --danger: #ef4444;
+            --mpesa: #00a859;
         }
 
         :root[data-theme="light"] {
@@ -36,6 +37,7 @@
             --success: #0070f3; 
             --warning: #f5a623;
             --danger: #ef4444;
+            --mpesa: #00a859;
         }
 
         * {
@@ -657,9 +659,24 @@
             border: 1px solid var(--border);
         }
 
+        .payable-card {
+            cursor: pointer;
+            transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .payable-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--mpesa);
+            box-shadow: 0 8px 24px rgba(0, 168, 89, 0.15);
+        }
+
         .plan-card.featured {
             border-color: var(--border-focus);
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .plan-card.featured.payable-card:hover {
+            border-color: var(--mpesa);
         }
 
         .plan-card h3 {
@@ -995,6 +1012,32 @@
         </div>
     </div>
 
+    <!-- M-PESA PAYMENT MODAL -->
+    <div class="policy-modal" id="payment-modal">
+        <div class="modal-card" style="max-width: 420px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 12px;">
+                <h3 style="margin:0;"><i class="fa-solid fa-mobile-screen-button" style="color: var(--mpesa); margin-right: 8px;"></i> M-PESA Payment</h3>
+                <button onclick="closeModal('payment-modal')" class="small-btn"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="promo-text" style="font-size: 0.9rem; line-height: 1.5;">
+                <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 16px; background: var(--bg); border-radius: 8px; border: 1px solid var(--border);">
+                    <span style="font-weight:600; color: var(--text-primary); text-transform: uppercase;" id="payment-plan-name">PLAN</span>
+                    <span style="font-weight:700; color: var(--text-primary); font-size: 1.1rem;">KSh <span id="pay-amount">0</span></span>
+                </div>
+                <div class="input-group">
+                    <label>M-PESA Phone Number</label>
+                    <input type="tel" id="mpesa-phone" placeholder="e.g. 0712345678 or 2547..." style="font-size: 1rem; letter-spacing: 1px; padding: 0 16px; height: 48px;">
+                </div>
+                <button class="btn" id="pay-btn" onclick="submitPayment()" style="width: 100%; height: 48px; background-color: var(--mpesa); color: white; font-size: 1rem; margin-top: 12px; font-weight: 600;">
+                    Pay Now
+                </button>
+                <p style="font-size: 0.75rem; text-align: center; margin-top: 16px; color: var(--text-secondary);">
+                    Ensure your phone is unlocked. You will receive an STK prompt to enter your M-PESA PIN securely.
+                </p>
+            </div>
+        </div>
+    </div>
+
     <!-- MOBILE TOP HEADER -->
     <header class="mobile-header">
         <div class="brand" style="padding:0;">
@@ -1298,7 +1341,7 @@
                 <div class="section-title">
                     <div>
                         <h2>Plans & Pricing</h2>
-                        <p>Scalable infrastructure tiers.</p>
+                        <p>Scalable infrastructure tiers. Click a plan to upgrade via M-PESA.</p>
                     </div>
                 </div>
 
@@ -1306,27 +1349,27 @@
                     <div class="plan-card">
                         <h3>Free</h3>
                         <div class="plan-price">KSh 0</div>
-                        <ul><li>2 Backend Units</li><li>1 Official Bot Slot</li></ul>
+                        <ul><li>2 Backend Units</li><li>12 Hours Access</li><li>1 Official Bot Slot</li></ul>
                     </div>
-                    <div class="plan-card">
+                    <div class="plan-card payable-card" onclick="openPaymentModal('startup', 20)">
                         <h3>Startup</h3>
                         <div class="plan-price">KSh 20</div>
-                        <ul><li>5 Backend Units</li><li>1 Official Bot Slot</li></ul>
+                        <ul><li>5 Backend Units</li><li>24 Hours Access</li><li>1 Official Bot Slot</li></ul>
                     </div>
-                    <div class="plan-card featured">
+                    <div class="plan-card featured payable-card" onclick="openPaymentModal('silver', 50)">
                         <h3>Silver</h3>
                         <div class="plan-price">KSh 50</div>
-                        <ul><li>10 Backend Units</li><li>1 Official Bot Slot</li></ul>
+                        <ul><li>10 Backend Units</li><li>1 Week Access</li><li>1 Official Bot Slot</li></ul>
                     </div>
-                    <div class="plan-card">
+                    <div class="plan-card payable-card" onclick="openPaymentModal('platinum', 100)">
                         <h3>Platinum</h3>
                         <div class="plan-price">KSh 100</div>
-                        <ul><li>50 Backend Units</li><li>1 Official Bot Slot</li></ul>
+                        <ul><li>50 Backend Units</li><li>1 Month Access</li><li>1 Official Bot Slot</li></ul>
                     </div>
-                    <div class="plan-card">
+                    <div class="plan-card payable-card" onclick="openPaymentModal('gold', 250)">
                         <h3>Gold</h3>
                         <div class="plan-price">KSh 250</div>
-                        <ul><li>Unlimited Units</li><li>No Reserved Limits</li></ul>
+                        <ul><li>Unlimited Units</li><li>3 Months Access</li><li>No Reserved Limits</li></ul>
                     </div>
                 </div>
             </section>
@@ -1352,6 +1395,8 @@
         let currentGeneratedName = `vinnie-${Math.random().toString(36).substring(2, 7)}`;
         let latestLiveUrl = "";
         let globalRepos = [];
+        let selectedPlanId = '';
+        let selectedAmount = 0;
 
         // --- THEME ENGINE (Strict System Default) ---
         function setTheme(theme) {
@@ -1453,6 +1498,51 @@
             repo.value = "https://github.com/Vinny256/COMRADES-MD-BOT";
             document.getElementById('deploy').scrollIntoView();
             scanBlueprint();
+        }
+
+        // --- BILLING LOGIC ---
+        function openPaymentModal(planId, amount) {
+            if (!isLoggedIn) return triggerAuth();
+            selectedPlanId = planId;
+            selectedAmount = amount;
+            document.getElementById('payment-plan-name').innerText = planId;
+            document.getElementById('pay-amount').innerText = amount;
+            document.getElementById('mpesa-phone').value = '';
+            openModal('payment-modal');
+        }
+
+        async function submitPayment() {
+            const phone = document.getElementById('mpesa-phone').value.trim();
+            if (!phone) return showToast("Please enter your M-PESA phone number", "var(--danger)");
+
+            const payBtn = document.getElementById('pay-btn');
+            payBtn.disabled = true;
+            payBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing...';
+
+            try {
+                const res = await fetch('/finance/stkpush', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ phone, planId: selectedPlanId, amount: selectedAmount })
+                });
+                const data = await res.json();
+                
+                if (data.success) {
+                    closeModal('payment-modal');
+                    showToast(data.message || "M-PESA prompt sent. Please check your phone.", "var(--success)");
+                    setTimeout(() => {
+                        showToast("Refreshing account status...", "var(--text-secondary)");
+                        window.location.reload();
+                    }, 15000);
+                } else {
+                    showToast(data.message || "Failed to trigger payment", "var(--danger)");
+                }
+            } catch (e) {
+                showToast("Network error during payment", "var(--danger)");
+            } finally {
+                payBtn.disabled = false;
+                payBtn.innerHTML = `Pay Now`;
+            }
         }
 
         // --- RENDER-STYLE REPO PICKER LOGIC ---
