@@ -61,7 +61,7 @@
             text-decoration: none;
         }
 
-        /* --- SIDEBAR NAVIGATION (HIGH CONTRAST) --- */
+        /* --- SIDEBAR NAVIGATION --- */
         .sidebar {
             width: 260px;
             background-color: var(--sidebar-bg);
@@ -75,6 +75,25 @@
             justify-content: space-between;
             z-index: 1000;
             padding: 20px 16px;
+            transition: width 0.3s ease, transform 0.3s ease;
+        }
+
+        .sidebar.collapsed {
+            width: 72px;
+        }
+
+        .sidebar.collapsed .brand span,
+        .sidebar.collapsed .nav-category,
+        .sidebar.collapsed .nav-link span,
+        .sidebar.collapsed .profile-name,
+        .sidebar.collapsed .sidebar-profile i,
+        .sidebar.collapsed .theme-switcher {
+            display: none;
+        }
+
+        .sidebar.collapsed .sidebar-profile {
+            justify-content: center;
+            padding: 10px 0;
         }
 
         .sidebar-top {
@@ -82,7 +101,20 @@
             flex-direction: column;
             gap: 24px;
             overflow-y: auto;
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE/Edge */
             max-height: calc(100vh - 140px);
+        }
+
+        .sidebar-top::-webkit-scrollbar {
+            display: none; /* Chrome/Safari/Opera */
+        }
+
+        .brand-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 4px;
         }
 
         .brand {
@@ -91,7 +123,6 @@
             gap: 12px;
             font-weight: 600;
             font-size: 1rem;
-            padding: 0 8px;
             color: var(--text-primary);
         }
 
@@ -103,6 +134,7 @@
             border-radius: 8px;
             background-color: var(--accent);
             color: var(--accent-text);
+            flex-shrink: 0;
         }
 
         .nav-category {
@@ -131,11 +163,13 @@
             font-size: 0.875rem;
             font-weight: 500;
             transition: all 0.2s ease;
+            white-space: nowrap;
         }
 
         .nav-link i {
             width: 16px;
             text-align: center;
+            flex-shrink: 0;
         }
 
         .nav-link:hover, .nav-link.active {
@@ -212,6 +246,7 @@
             border-radius: 50%;
             border: 1px solid var(--border);
             object-fit: cover;
+            flex-shrink: 0;
         }
 
         .profile-name {
@@ -230,6 +265,12 @@
             flex-grow: 1;
             padding: 40px 5%;
             max-width: calc(100% - 260px);
+            transition: margin-left 0.3s ease, max-width 0.3s ease;
+        }
+
+        body.collapsed-sidebar .main-content {
+            margin-left: 72px;
+            max-width: calc(100% - 72px);
         }
 
         .glass {
@@ -425,7 +466,7 @@
             border-color: var(--border-focus);
         }
 
-        /* --- RENDER-STYLE REPOSITORY SELECTOR CARD --- */
+        /* --- REPOSITORY SELECTOR --- */
         .repo-picker-box {
             position: relative;
             margin-bottom: 16px;
@@ -686,7 +727,7 @@
             margin: 0;
         }
 
-        /* --- MODALS & OVERLAYS --- */
+        /* --- PROFESSIONAL MODALS & OVERLAYS --- */
         .auth-overlay, .settings-modal, .policy-modal {
             position: fixed;
             inset: 0;
@@ -694,21 +735,22 @@
             display: none;
             align-items: center;
             justify-content: center;
-            background-color: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(4px);
+            background-color: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(6px);
         }
 
         .auth-prompt, .modal-card {
             width: 100%;
-            max-width: 420px;
-            padding: 32px;
+            max-width: 440px;
+            padding: 36px;
             background-color: var(--bg-surface);
             border: 1px solid var(--border);
-            border-radius: 8px;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.7);
         }
 
         .modal-card {
-            max-width: 650px;
+            max-width: 600px;
             max-height: 85vh;
             overflow-y: auto;
         }
@@ -764,13 +806,14 @@
             .sidebar {
                 transform: translateX(-100%);
                 transition: transform 0.3s ease;
+                width: 260px !important;
             }
             .sidebar.open {
                 transform: translateX(0);
             }
             .main-content {
-                margin-left: 0;
-                max-width: 100%;
+                margin-left: 0 !important;
+                max-width: 100% !important;
                 padding: 80px 5% 40px;
             }
             .mobile-header {
@@ -787,25 +830,25 @@
 </head>
 <body>
 
-    <!-- SIGN-IN MODAL WITH TERMS CHECKBOX -->
+    <!-- SIGN-IN MODAL WITH MANDATORY TERMS CHECKBOX -->
     <div class="auth-overlay" id="auth-gate">
         <div class="auth-prompt">
             <div style="display: flex; justify-content: flex-end; margin-bottom: 16px;">
                 <button onclick="closeAuth()" class="small-btn"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <h2>Access Vinnie Host</h2>
+            <h2 style="margin-top:0;">Access Vinnie Host</h2>
             <p class="promo-text">
                 Sign in to deploy backends, configure environment variables, and stream live build logs.
             </p>
 
-            <div style="margin-bottom: 16px; text-align: left; display: flex; align-items: flex-start; gap: 8px;">
-                <input type="checkbox" id="terms-check" style="width: 16px; height: 16px; margin-top: 3px; cursor: pointer;">
-                <label for="terms-check" style="font-size: 0.75rem; text-transform: none; color: var(--text-secondary); cursor: pointer; line-height: 1.4;">
+            <div style="margin-bottom: 20px; text-align: left; display: flex; align-items: flex-start; gap: 10px; background: var(--bg); padding: 12px; border-radius: 6px; border: 1px solid var(--border);">
+                <input type="checkbox" id="terms-check" style="width: 18px; height: 18px; margin-top: 2px; cursor: pointer;">
+                <label for="terms-check" style="font-size: 0.775rem; text-transform: none; color: var(--text-secondary); cursor: pointer; line-height: 1.4;">
                     I agree to the <a href="javascript:void(0)" onclick="openModal('terms-modal')" style="color: var(--text-primary); text-decoration: underline;">Terms of Service</a> and <a href="javascript:void(0)" onclick="openModal('privacy-modal')" style="color: var(--text-primary); text-decoration: underline;">Privacy Policy</a>.
                 </label>
             </div>
 
-            <button onclick="handleOAuth('/auth/github')" class="btn btn-secondary" style="width:100%; margin-bottom: 8px;">
+            <button onclick="handleOAuth('/auth/github')" class="btn btn-secondary" style="width:100%; margin-bottom: 10px;">
                 <i class="fa-brands fa-github"></i> Continue with GitHub
             </button>
             <button onclick="handleOAuth('/auth/google')" class="btn btn-secondary" style="width:100%;">
@@ -814,39 +857,39 @@
         </div>
     </div>
 
-    <!-- ACCOUNT SETTINGS MODAL -->
+    <!-- PROFESSIONAL ACCOUNT SETTINGS MODAL -->
     <div class="settings-modal" id="settings-modal">
         <div class="modal-card">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h3 style="margin:0; font-size: 1.15rem;">Account Settings</h3>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 14px;">
+                <h3 style="margin:0; font-size: 1.25rem;">Account Settings</h3>
                 <button onclick="closeSettings()" class="small-btn"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <% if (user) { %>
-                <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 24px; padding: 16px; background: var(--bg); border-radius: 8px; border: 1px solid var(--border);">
-                    <img src="<%= user.avatar %>" style="width: 48px; height: 48px; border-radius: 50%; border: 1px solid var(--border);" alt="Avatar">
+                <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 24px; padding: 18px; background: var(--bg); border-radius: 10px; border: 1px solid var(--border);">
+                    <img src="<%= user.avatar %>" style="width: 56px; height: 56px; border-radius: 50%; border: 1px solid var(--border); object-fit: cover;" alt="Avatar">
                     <div>
-                        <div style="font-weight: 600; font-size: 0.95rem;"><%= user.displayName %></div>
-                        <div style="font-size: 0.75rem; color: var(--text-secondary); font-family: monospace; margin-top: 2px;">ID: #<%= user.id %> | Plan: <%= user.plan || 'free' %></div>
+                        <div style="font-weight: 600; font-size: 1.05rem;"><%= user.displayName %></div>
+                        <div style="font-size: 0.8125rem; color: var(--text-secondary); font-family: monospace; margin-top: 4px;">User ID: #<%= user.id %> &bull; Plan: <span style="text-transform: capitalize; color: var(--text-primary); font-weight: 600;"><%= user.plan || 'free' %></span></div>
                     </div>
                 </div>
 
-                <div class="input-group">
-                    <label>Linked Authentication Profiles</label>
-                    <div style="display: flex; gap: 10px; margin-top: 8px;">
-                        <span class="btn btn-secondary" style="flex:1; justify-content: flex-start; cursor: default; font-size: 0.8125rem;">
-                            <i class="fa-brands fa-github" style="color: <%= user.githubId ? 'var(--success)' : 'var(--text-secondary)' %>;"></i> 
-                            <%= user.githubId ? 'GitHub Connected' : 'GitHub Unlinked' %>
-                        </span>
-                        <span class="btn btn-secondary" style="flex:1; justify-content: flex-start; cursor: default; font-size: 0.8125rem;">
-                            <i class="fa-brands fa-google" style="color: <%= user.googleId ? 'var(--success)' : 'var(--text-secondary)' %>;"></i> 
-                            <%= user.googleId ? 'Google Connected' : 'Google Unlinked' %>
-                        </span>
+                <div class="input-group" style="margin-bottom: 20px;">
+                    <label>Identity Providers</label>
+                    <div style="display: flex; gap: 12px; margin-top: 8px;">
+                        <div class="glass" style="flex:1; padding: 12px 14px; border-radius: 8px; display: flex; align-items: center; justify-content: space-between;">
+                            <span style="display: flex; align-items: center; gap: 8px; font-size: 0.875rem;"><i class="fa-brands fa-github"></i> GitHub</span>
+                            <span style="font-size: 0.75rem; padding: 2px 8px; border-radius: 4px; background: <%= user.githubId ? 'rgba(0,112,243,0.15)' : 'var(--bg)' %>; color: <%= user.githubId ? 'var(--success)' : 'var(--text-secondary)' %>;"><%= user.githubId ? 'Connected' : 'Unlinked' %></span>
+                        </div>
+                        <div class="glass" style="flex:1; padding: 12px 14px; border-radius: 8px; display: flex; align-items: center; justify-content: space-between;">
+                            <span style="display: flex; align-items: center; gap: 8px; font-size: 0.875rem;"><i class="fa-brands fa-google"></i> Google</span>
+                            <span style="font-size: 0.75rem; padding: 2px 8px; border-radius: 4px; background: <%= user.googleId ? 'rgba(0,112,243,0.15)' : 'var(--bg)' %>; color: <%= user.googleId ? 'var(--success)' : 'var(--text-secondary)' %>;"><%= user.googleId ? 'Connected' : 'Unlinked' %></span>
+                        </div>
                     </div>
                 </div>
 
-                <div class="input-group" style="margin-top: 24px;">
-                    <label>Session Management</label>
-                    <a href="/logout" class="btn btn-danger" style="width: 100%; justify-content: center; margin-top: 8px;">
+                <div class="input-group" style="margin-top: 28px; border-top: 1px solid var(--border); padding-top: 20px;">
+                    <label>Session Controls</label>
+                    <a href="/logout" class="btn btn-danger" style="width: 100%; justify-content: center; margin-top: 8px; height: 44px;">
                         <i class="fa-solid fa-right-from-bracket"></i> Sign Out from Vinnie Host
                     </a>
                 </div>
@@ -861,7 +904,7 @@
                 <h3 style="margin:0;">Terms of Service</h3>
                 <button onclick="closeModal('terms-modal')" class="small-btn"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <div class="promo-text" style="font-size: 0.8125rem; line-height: 1.6; max-height: 350px; overflow-y: auto;">
+            <div class="promo-text" style="font-size: 0.875rem; line-height: 1.6; max-height: 380px; overflow-y: auto;">
                 <p>Welcome to Vinnie Host. By accessing or using our cloud deployment platform, you agree to comply with and be bound by the following terms.</p>
                 <p><b>1. Acceptable Use:</b> You agree not to host malicious software, phishing tools, spam relays, or unauthorized copyrighted materials. Infrastructure abuse will result in immediate termination.</p>
                 <p><b>2. Service Limitations:</b> Free and paid tiers are provided with specific resource allocations. We maintain high availability standards but do not guarantee uninterrupted uptime.</p>
@@ -877,7 +920,7 @@
                 <h3 style="margin:0;">Privacy Policy</h3>
                 <button onclick="closeModal('privacy-modal')" class="small-btn"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <div class="promo-text" style="font-size: 0.8125rem; line-height: 1.6; max-height: 350px; overflow-y: auto;">
+            <div class="promo-text" style="font-size: 0.875rem; line-height: 1.6; max-height: 380px; overflow-y: auto;">
                 <p>Vinnie Host respects your privacy. This policy outlines how we collect and manage your information.</p>
                 <p><b>1. Information Collected:</b> We collect authentication profile data (Google/GitHub ID, display name, avatar) and optional access tokens required to list your repositories for deployment.</p>
                 <p><b>2. Token Security:</b> GitHub tokens are securely stored and utilized exclusively for fetching authorized repositories and establishing automated server links.</p>
@@ -901,29 +944,34 @@
     <!-- SIDEBAR NAVIGATION -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-top">
-            <div class="brand">
-                <div class="brand-icon"><i class="fa-solid fa-cloud"></i></div>
-                <span>Vinnie Host</span>
+            <div class="brand-row">
+                <div class="brand">
+                    <div class="brand-icon"><i class="fa-solid fa-cloud"></i></div>
+                    <span>Vinnie Host</span>
+                </div>
+                <button class="small-btn" onclick="toggleDesktopCollapse()" title="Collapse Sidebar" style="width: 28px; height: 28px; display: none;" id="collapse-icon-btn">
+                    <i class="fa-solid fa-chevron-left" id="collapse-arrow" style="font-size: 0.75rem;"></i>
+                </button>
             </div>
 
             <div class="nav-group">
                 <div class="nav-category">Dashboard</div>
-                <a href="#home" class="nav-link active" onclick="toggleSidebar()"><i class="fa-solid fa-table-cells-large"></i> Overview</a>
-                <a href="#apps" class="nav-link" onclick="toggleSidebar()"><i class="fa-solid fa-server"></i> My Apps</a>
-                <a href="#deploy" class="nav-link" onclick="toggleSidebar()"><i class="fa-solid fa-cloud-arrow-up"></i> Deploy New App</a>
+                <a href="#home" class="nav-link active" onclick="toggleSidebar()"><i class="fa-solid fa-table-cells-large"></i> <span>Overview</span></a>
+                <a href="#apps" class="nav-link" onclick="toggleSidebar()"><i class="fa-solid fa-server"></i> <span>My Apps</span></a>
+                <a href="#deploy" class="nav-link" onclick="toggleSidebar()"><i class="fa-solid fa-cloud-arrow-up"></i> <span>Deploy New App</span></a>
             </div>
 
             <div class="nav-group">
                 <div class="nav-category">Management</div>
-                <a href="#env" class="nav-link" onclick="toggleSidebar()"><i class="fa-solid fa-sliders"></i> Env Variables</a>
-                <a href="#logs" class="nav-link" onclick="toggleSidebar()"><i class="fa-solid fa-terminal"></i> Build Logs</a>
-                <a href="#plans" class="nav-link" onclick="toggleSidebar()"><i class="fa-solid fa-layer-group"></i> Plans & Tiers</a>
+                <a href="#env" class="nav-link" onclick="toggleSidebar()"><i class="fa-solid fa-sliders"></i> <span>Env Variables</span></a>
+                <a href="#logs" class="nav-link" onclick="toggleSidebar()"><i class="fa-solid fa-terminal"></i> <span>Build Logs</span></a>
+                <a href="#plans" class="nav-link" onclick="toggleSidebar()"><i class="fa-solid fa-layer-group"></i> <span>Plans & Tiers</span></a>
             </div>
 
             <div class="nav-group">
                 <div class="nav-category">Tools & Official</div>
-                <a href="#official" class="nav-link" onclick="toggleSidebar()"><i class="fa-solid fa-robot"></i> Official Bot</a>
-                <a href="#features" class="nav-link" onclick="toggleSidebar()"><i class="fa-solid fa-cubes"></i> Features</a>
+                <a href="#official" class="nav-link" onclick="toggleSidebar()"><i class="fa-solid fa-robot"></i> <span>Official Bot</span></a>
+                <a href="#features" class="nav-link" onclick="toggleSidebar()"><i class="fa-solid fa-cubes"></i> <span>Features</span></a>
             </div>
         </div>
 
@@ -938,7 +986,7 @@
 
             <!-- Profile / Settings Trigger -->
             <% if (user) { %>
-                <div class="sidebar-profile" onclick="openSettings()">
+                <div class="sidebar-profile" onclick="openSettings()" title="Account Settings">
                     <div class="profile-info">
                         <img src="<%= user.avatar %>" class="avatar" alt="Avatar">
                         <span class="profile-name"><%= user.displayName %></span>
@@ -1237,23 +1285,46 @@
         let latestLiveUrl = "";
         let globalRepos = [];
 
-        // --- THEME ENGINE ---
+        // --- THEME ENGINE (User Choice First) ---
         function setTheme(theme) {
             localStorage.setItem('vinnie_theme', theme);
             document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`btn-${theme}`).classList.add('active');
+
             if (theme === 'system') {
-                document.getElementById('btn-system').classList.add('active');
                 const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
                 document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
             } else {
-                document.getElementById(`btn-${theme}`).classList.add('active');
                 document.documentElement.setAttribute('data-theme', theme);
             }
         }
 
         (function initTheme() {
-            const saved = localStorage.getItem('vinnie_theme') || 'dark';
+            const saved = localStorage.getItem('vinnie_theme') || 'system';
             setTheme(saved);
+        })();
+
+        // --- DESKTOP SIDEBAR COLLAPSE TOGGLE ---
+        function toggleDesktopCollapse() {
+            const sidebar = document.getElementById('sidebar');
+            const body = document.body;
+            const arrow = document.getElementById('collapse-arrow');
+            sidebar.classList.toggle('collapsed');
+            body.classList.toggle('collapsed-sidebar');
+            const isCollapsed = sidebar.classList.contains('collapsed');
+            arrow.className = isCollapsed ? 'fa-solid fa-chevron-right' : 'fa-solid fa-chevron-left';
+            localStorage.setItem('vinnie_sidebar_collapsed', isCollapsed);
+        }
+
+        (function initSidebarState() {
+            if (window.innerWidth > 1024) {
+                document.getElementById('collapse-icon-btn').style.display = 'grid';
+                if (localStorage.getItem('vinnie_sidebar_collapsed') === 'true') {
+                    document.getElementById('sidebar').classList.add('collapsed');
+                    document.body.classList.add('collapsed-sidebar');
+                    document.getElementById('collapse-arrow').className = 'fa-solid fa-chevron-right';
+                }
+            }
         })();
 
         // --- AUTH & MODALS ---
